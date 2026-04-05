@@ -56,7 +56,7 @@ export default function OperationalMilestones() {
   return (
     <section className="bg-white max-w-[1300px] mx-auto shadow-2xl rounded-sm overflow-hidden border-b-4 border-[#E31E24] relative z-20">
       
-      {/* HEADER - Responsive spacing and font sizes */}
+      {/* HEADER */}
       <div className="px-5 md:px-8 py-5 md:py-6 bg-white border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-[9px] font-black text-[#E31E24] uppercase tracking-[0.4em] mb-1">CORPORATE NEWSFEED</h2>
@@ -77,26 +77,23 @@ export default function OperationalMilestones() {
       <div className="bg-[#0b131e] p-4 md:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
-          {/* VIDEO - Full width on mobile/tablet, spans 7 columns on desktop */}
           <div className="lg:col-span-7 relative aspect-video overflow-hidden group cursor-pointer bg-black rounded-sm" onClick={() => openModal(0)}>
             <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity">
               <source src={operationsData.featuredVideo.videoSrc} type="video/mp4" />
             </video>
             <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-center text-white group-hover:scale-110 transition-all duration-500 shadow-2xl">
-                    <Play size={20} md:size={24} fill="currentColor" className="ml-1" />
+                    {/* FIXED: Using className for responsive icon size */}
+                    <Play className="w-5 h-5 md:w-6 md:h-6 ml-1" fill="currentColor" />
                 </div>
             </div>
           </div>
 
-          {/* RIGHT GALLERY - Column on mobile, spans 5 columns on desktop */}
           <div className="lg:col-span-5 flex flex-col gap-4">
-            {/* Top Large Image */}
             <div className="relative h-48 md:h-64 lg:h-[60%] overflow-hidden cursor-pointer group bg-[#161e29] rounded-sm" onClick={() => openModal(1)}>
                 <Image src={operationsData.homepageImages[0].src} alt="Activity" fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
             </div>
 
-            {/* Bottom Row - 2 images side by side */}
             <div className="h-32 md:h-40 lg:h-[40%] flex gap-4">
                 <div className="flex-1 relative overflow-hidden cursor-pointer group bg-[#161e29] rounded-sm" onClick={() => openModal(2)}>
                     <Image src={operationsData.homepageImages[1].src} alt="" fill className="object-cover transition-transform duration-1000 group-hover:scale-110" />
@@ -117,30 +114,30 @@ export default function OperationalMilestones() {
         </div>
       </div>
 
-      {/* LIGHTBOX POPUP - Fully Responsive UI */}
+      {/* LIGHTBOX POPUP */}
       {isModalOpen && (
         <div 
           className="fixed inset-0 w-screen h-screen bg-[#0b131e] z-[9999] flex items-center justify-center overflow-hidden touch-none"
           onClick={closeModal}
         >
-          {/* Close Button - Scaled for Mobile */}
+          {/* FIXED: Using className for responsive icon size */}
           <button 
             type="button"
             onClick={(e) => { e.stopPropagation(); closeModal(); }} 
             className="absolute top-4 right-4 md:top-8 md:right-8 text-white/40 hover:text-[#E31E24] z-[10001] p-2 transition-all"
           >
-            <X size={32} md:size={48} strokeWidth={1.5} />
+            <X className="w-8 h-8 md:w-12 md:h-12" strokeWidth={1.5} />
           </button>
           
           <div className="relative w-full h-full flex items-center justify-center px-4 md:px-24">
             
-            {/* Navigation Arrows - Scaled for Mobile */}
+            {/* FIXED: Using className for responsive icon sizes */}
             <button 
                 type="button"
                 onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + albumMedia.length) % albumMedia.length); }} 
                 className="absolute left-2 md:left-8 text-white/10 hover:text-white transition-all z-[10000]"
             >
-                <ChevronLeft size={40} md:size={80} strokeWidth={0.5} />
+                <ChevronLeft className="w-10 h-10 md:w-20 md:h-20" strokeWidth={0.5} />
             </button>
 
             <button 
@@ -148,10 +145,9 @@ export default function OperationalMilestones() {
                 onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % albumMedia.length); }} 
                 className="absolute right-2 md:right-8 text-white/10 hover:text-white transition-all z-[10000]"
             >
-                <ChevronRight size={40} md:size={80} strokeWidth={0.5} />
+                <ChevronRight className="w-10 h-10 md:w-20 md:h-20" strokeWidth={0.5} />
             </button>
 
-            {/* Media Content - Dynamic Height */}
             <div className="relative w-full h-[70vh] md:h-[85vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
               {albumMedia[currentIndex].type === 'video' ? (
                 <video controls autoPlay className="max-w-full max-h-full shadow-2xl border border-white/5 bg-black">
@@ -170,7 +166,6 @@ export default function OperationalMilestones() {
               )}
             </div>
 
-            {/* Indicator / Counter for Mobile */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
                 {currentIndex + 1} / {albumMedia.length}
             </div>
