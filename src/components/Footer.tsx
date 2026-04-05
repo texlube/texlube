@@ -123,7 +123,7 @@ export default function Footer() {
               </li>
               <li className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
                 <Phone size={16} className="text-[#E31E24]" />
-                <span className="text-xs text-gray-400 font-medium">+971 6 123 4567</span>
+                <span className="text-xs text-gray-400 font-medium">+971 6 529 5105</span>
               </li>
             </ul>
           </div>
