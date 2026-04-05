@@ -20,7 +20,7 @@ const categories = [
   { id: 'atf-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
-  { id: 'specialty-oil', name: 'SPECIALTY OIL' },
+  { id: 'specialty-oil', name: 'SPECIALITY OIL' },
   { id: 'greases', name: 'GREASES' },
 ];
 
@@ -95,9 +95,9 @@ function ProductsList() {
       </div>
 
       {/* 2. SUB-CATEGORY BAR (Specialty Only) */}
-      {(categoryParam === 'specialty-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
+      {(categoryParam === 'speciality-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
         <div className="flex justify-center gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500">
-          <button onClick={() => router.push('/products?category=specialty-oil')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'specialty-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALTY</button>
+          <button onClick={() => router.push('/products?category=specialty-oil')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
           <button onClick={() => router.push('/products?category=coolant')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
           <button onClick={() => router.push('/products?category=brake-fluid')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'brake-fluid' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>BRAKE FLUIDS</button>
         </div>
