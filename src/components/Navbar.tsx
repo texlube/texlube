@@ -1,0 +1,175 @@
+"use client";
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { 
+  ChevronDown, 
+  Phone, 
+  Mail, 
+  ChevronRight
+} from 'lucide-react';
+import QuoteModal from './QuoteModal'; // Ensure you have created this component
+
+const productCategories = [
+  { name: "Passenger Car", slug: "passenger-car" },
+  { name: "Trucks & Busses", slug: "trucks-busses" },
+  { name: "Motor Cycle", slug: "motor-cycle" },
+  { name: "ATF & Gear", slug: "atf-gear" },
+  { name: "Industrial", slug: "industrial" },
+  { name: "Hydraulic", slug: "hydraulic" },
+  { 
+    name: "Specialty Oil", 
+    slug: "specialty-oil",
+    hasSub: true,
+    subItems: [
+      { name: "Coolant", slug: "coolant" },
+      { name: "Brake Fluid", slug: "brake-fluid" }
+    ]
+  },
+  { name: "Greases", slug: "greases" },
+];
+
+export default function Navbar() {
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+
+  return (
+    <>
+      <header className="fixed top-0 left-0 w-full z-[100]">
+        
+        {/* 1. TOP UTILITY BAR - Centered Contact Information */}
+        <div className="w-full bg-[#12223b] text-white py-2.5 px-6 border-b border-white/5">
+          <div className="max-w-[1300px] mx-auto flex justify-center items-center gap-10 md:gap-16">
+            
+            {/* Phone Number */}
+            <a 
+              href="tel:+97161234567" 
+              className="flex items-center gap-3 hover:text-[#E31E24] transition-all group"
+            >
+              <Phone size={14} className="text-[#2B99D6] group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-regular lowercase tracking-[0.2em]">+971 6 123 4567</span>
+            </a>
+
+            {/* Vertical Divider */}
+            <div className="w-[1px] h-3 bg-white/10 hidden sm:block"></div>
+
+            {/* Email Address */}
+            <a 
+              href="mailto:info@texlubricant.com" 
+              className="flex items-center gap-3 hover:text-[#E31E24] transition-all group"
+            >
+              <Mail size={14} className="text-[#2B99D6] group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-regular lowercase tracking-[0.2em]">info@texlubricant.com</span>
+            </a>
+
+          </div>
+        </div>
+
+        {/* 2. MAIN NAVIGATION BAR */}
+        <nav className="w-full bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100">
+          <div className="max-w-[1300px] mx-auto px-6 flex items-center justify-between h-[80px]">
+            
+            {/* LOGO */}
+            <Link href="/" className="relative flex items-center h-full">
+              <div className="relative w-[180px] md:w-[220px] h-[50px] transition-transform duration-300 hover:scale-105">
+                <Image 
+                  src="/logo.png" 
+                  alt="TEXLUBE" 
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </Link>
+
+            {/* NAVIGATION LINKS */}
+            <div className="hidden lg:flex items-center gap-10 h-full">
+              
+              {/* PRODUCTS DROPDOWN */}
+              <div className="relative group flex items-center h-full">
+                <Link 
+                  href="/products" 
+                  className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full flex items-center"
+                >
+                  PRODUCTS
+                  <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 opacity-50" />
+                </Link>
+
+                <div className="absolute top-full left-0 w-72 bg-white shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border-t-4 border-[#E31E24]">
+                  <div className="flex flex-col py-2">
+                    {productCategories.map((cat) => (
+                      <div key={cat.slug} className="relative group/specialty">
+                        <Link 
+                          href={`/products?category=${cat.slug}`}
+                          className="flex items-center justify-between px-8 py-4 text-[10px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0"
+                        >
+                          {cat.name}
+                          {cat.hasSub && <ChevronRight size={12} className="text-gray-300" />}
+                        </Link>
+
+                        {cat.hasSub && (
+                          <div className="absolute top-0 left-full w-64 bg-white shadow-2xl opacity-0 invisible group-hover/specialty:opacity-100 group-hover/specialty:visible transition-all duration-300 border-l border-gray-100">
+                            <div className="flex flex-col py-2">
+                              {cat.subItems?.map((sub) => (
+                                <Link 
+                                  key={sub.slug}
+                                  href={`/products?category=${sub.slug}`}
+                                  className="px-8 py-4 text-[10px] font-black text-gray-500 hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0"
+                                >
+                                  {sub.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* WHY TEXLUBE DROPDOWN */}
+              <div className="relative group flex items-center h-full">
+                <Link 
+                  href="/technology" 
+                  className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full flex items-center"
+                >
+                  WHY TEXLUBE
+                  <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 opacity-50" />
+                </Link>
+
+                <div className="absolute top-full left-0 w-64 bg-white shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border-t-4 border-[#E31E24]">
+                  <div className="flex flex-col py-2">
+                    <Link href="/about" className="px-8 py-4 text-[11px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50">ABOUT US</Link>
+                    <Link href="/contact" className="px-8 py-4 text-[11px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest">CONTACT</Link>
+                  </div>
+                </div>
+              </div>
+
+              <Link href="/news" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
+                NEWS
+              </Link>
+            </div>
+
+            {/* CTA BUTTON - Triggers Lead Capture Modal */}
+            <div className="flex items-center">
+              <button 
+                onClick={() => setIsQuoteOpen(true)}
+                className="bg-[#0D243F] text-white px-6 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-[#E31E24] transition-all rounded-sm hidden sm:block shadow-md hover:shadow-xl active:scale-95"
+              >
+                REQUEST A QUOTE
+              </button>
+            </div>
+
+          </div>
+        </nav>
+      </header>
+
+      {/* LEAD CAPTURE POPUP */}
+      <QuoteModal 
+        isOpen={isQuoteOpen} 
+        onClose={() => setIsQuoteOpen(false)} 
+      />
+    </>
+  );
+}
