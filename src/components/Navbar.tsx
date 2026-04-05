@@ -43,9 +43,9 @@ export default function Navbar() {
         {/* 1. TOP UTILITY BAR - Optimized for Mobile */}
         <div className="w-full bg-[#12223b] text-white py-2.5 px-6 border-b border-white/5">
           <div className="max-w-[1300px] mx-auto flex justify-center items-center gap-4 md:gap-16">
-            <a href="tel:+97161234567" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
+            <a href="tel:+97165295105" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
               <Phone size={12} className="text-[#2B99D6]" />
-              <span className="text-[9px] md:text-[10px] font-regular tracking-[0.1em]">+971 6 123 4567</span>
+              <span className="text-[9px] md:text-[10px] font-regular tracking-[0.1em]">+971 6 529 5105</span>
             </a>
             <div className="w-[1px] h-3 bg-white/10"></div>
             <a href="mailto:info@texlubricant.com" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
