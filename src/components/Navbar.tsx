@@ -19,8 +19,8 @@ const productCategories = [
   { name: "Industrial", slug: "industrial" },
   { name: "Hydraulic", slug: "hydraulic" },
   { 
-    name: "Specialty Oil", 
-    slug: "specialty-oil",
+    name: "Speciality Oil", 
+    slug: "speciality-oil",
     hasSub: true,
     subItems: [
       { name: "Coolant", slug: "coolant" },
