@@ -12,6 +12,7 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// FIXED: Changed id to 'speciality-oil' to match your new schema
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
@@ -20,7 +21,7 @@ const categories = [
   { id: 'atf-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
-  { id: 'specialty-oil', name: 'SPECIALITY OIL' },
+  { id: 'speciality-oil', name: 'SPECIALITY OIL' }, // Updated spelling here
   { id: 'greases', name: 'GREASES' },
 ];
 
@@ -36,7 +37,6 @@ function ProductsList() {
     async function fetchSanityProducts() {
       setLoading(true);
       try {
-        // Query fetches both mainImage and image to ensure we get the file
         const query = `*[_type == "product"]{
           "id": _id,
           "name": title,
@@ -80,13 +80,14 @@ function ProductsList() {
               key={cat.id} 
               onClick={() => router.push(`/products?category=${cat.id}`, { scroll: false })} 
               className={`pb-5 text-[10px] font-black tracking-[0.2em] relative transition-all ${
-                categoryParam === cat.id || (cat.id === 'specialty-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))
+                // FIXED: Logic now looks for 'speciality-oil'
+                categoryParam === cat.id || (cat.id === 'speciality-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))
                 ? 'text-[#0D243F]' 
                 : 'text-gray-400 hover:text-[#E31E24]'
               }`}
             >
               {cat.name}
-              {(categoryParam === cat.id || (cat.id === 'specialty-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))) && (
+              {(categoryParam === cat.id || (cat.id === 'speciality-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))) && (
                 <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E31E24]" />
               )}
             </button>
@@ -94,10 +95,10 @@ function ProductsList() {
         </div>
       </div>
 
-      {/* 2. SUB-CATEGORY BAR (Specialty Only) */}
+      {/* 2. SUB-CATEGORY BAR (Speciality Only) */}
       {(categoryParam === 'speciality-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
         <div className="flex justify-center gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500">
-          <button onClick={() => router.push('/products?category=specialty-oil')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
+          <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
           <button onClick={() => router.push('/products?category=coolant')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
           <button onClick={() => router.push('/products?category=brake-fluid')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'brake-fluid' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>BRAKE FLUIDS</button>
         </div>
