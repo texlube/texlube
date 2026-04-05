@@ -166,7 +166,7 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
-      <Footer />
+
     </main>
   );
 }
