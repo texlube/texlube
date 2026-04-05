@@ -1,9 +1,11 @@
 import Image from 'next/image';
+/* NOTE: If you are fetching from Sanity, make sure to import your urlFor helper here */
+// import { urlFor } from '@/sanity/lib/image'; 
 
 const products = [
-  { id: 1, name: "OFFICIALTECH 5W30 C3", desc: "Fully synthetic high-performance motor oil.", spec: "ACEA C3 / API SN/CF" },
-  { id: 2, name: "ECOTECH 0W20 FE", desc: "Ultra-low viscosity for modern fuel economy.", spec: "API SP / ILSAC GF-6A" },
-  { id: 3, name: "VITALTECH 10W40", desc: "Advanced protection for heavy-duty engines.", spec: "ACEA A3/B4" },
+  { id: 1, name: "OFFICIALTECH 5W30 C3", desc: "Fully synthetic high-performance motor oil.", spec: "ACEA C3 / API SN/CF", image: "/product1.png" },
+  { id: 2, name: "ECOTECH 0W20 FE", desc: "Ultra-low viscosity for modern fuel economy.", spec: "API SP / ILSAC GF-6A", image: "/product2.png" },
+  { id: 3, name: "VITALTECH 10W40", desc: "Advanced protection for heavy-duty engines.", spec: "ACEA A3/B4", image: "/product3.png" },
 ];
 
 export default function ProductGrid() {
@@ -16,13 +18,24 @@ export default function ProductGrid() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {products.map((oil) => (
+          {products.map((oil, index) => (
             <div key={oil.id} className="bg-white p-8 group hover:shadow-2xl transition-all duration-500 border border-gray-100">
               <div className="aspect-[3/4] bg-gray-50 mb-8 relative overflow-hidden flex items-center justify-center">
-                {/* Logo Placeholder inside the product area */}
-                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest opacity-40">
-                  NEWLUBE Product Image
-                </div>
+                
+                {/* OPTIMIZED IMAGE COMPONENT */}
+                <Image 
+                  /* If using Sanity, use: src={urlFor(oil.image).width(600).url()} */
+                  src={oil.image} 
+                  alt={oil.name}
+                  fill
+                  className="object-contain p-4 group-hover:scale-110 transition-transform duration-500"
+                  /* 1. Priority: Only for the first 3 (the first row) 
+                    2. Sizes: Tells browser image is ~400px on desktop and full width on mobile 
+                  */
+                  priority={index < 3}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                />
+
               </div>
               <h4 className="text-xl font-bold text-[#0D243F] mb-2 uppercase tracking-tight">{oil.name}</h4>
               <p className="text-gray-500 text-sm mb-4 line-clamp-2">{oil.desc}</p>

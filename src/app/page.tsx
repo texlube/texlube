@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { client } from '@/sanity/client';
 
-// Import your sub-components (Make sure these files are moved to src/components/)
+// Import your sub-components
 import OperationalMilestones from "@/components/OperationalMilestones";
 import SolutionsCarousel from '@/components/SolutionsCarousel';
 import BusinessGrowth from "@/components/BusinessGrowth";
@@ -67,7 +67,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN */}
+          {/* RIGHT COLUMN - Optimized for Speed */}
           <div className="relative aspect-[4/3] overflow-hidden shadow-2xl rounded-sm">
               <div className="absolute inset-0 bg-gradient-to-r from-[#002e5b]/40 via-transparent to-transparent z-10 pointer-events-none"></div>
               
@@ -77,6 +77,10 @@ export default async function HomePage() {
                 fill
                 className="object-cover object-center opacity-80 mix-blend-overlay"
                 priority
+                /* ENHANCEMENT: sizes helps the browser fetch the correct weight instantly */
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 650px"
+                /* Optional: Add quality if you want to push it even faster */
+                quality={90}
               />
           </div>
         </div>
