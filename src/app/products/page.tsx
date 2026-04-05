@@ -12,7 +12,6 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-// FIXED: Changed id to 'speciality-oil' to match your new schema
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
@@ -21,7 +20,7 @@ const categories = [
   { id: 'atf-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
-  { id: 'speciality-oil', name: 'SPECIALITY OIL' }, // Updated spelling here
+  { id: 'speciality-oil', name: 'SPECIALITY OIL' },
   { id: 'greases', name: 'GREASES' },
 ];
 
@@ -72,15 +71,15 @@ function ProductsList() {
 
   return (
     <>
-      {/* 1. MAIN CATEGORY TABS */}
+      {/* 1. MAIN CATEGORY TABS - FIXED SCROLLING ISSUE */}
       <div className="border-b border-gray-100 mb-8 overflow-x-auto no-scrollbar">
-        <div className="max-w-full flex justify-center gap-10 whitespace-nowrap px-6">
+        {/* Added justify-start for mobile and min-w-max to prevent clipping */}
+        <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => (
             <button 
               key={cat.id} 
               onClick={() => router.push(`/products?category=${cat.id}`, { scroll: false })} 
               className={`pb-5 text-[10px] font-black tracking-[0.2em] relative transition-all ${
-                // FIXED: Logic now looks for 'speciality-oil'
                 categoryParam === cat.id || (cat.id === 'speciality-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))
                 ? 'text-[#0D243F]' 
                 : 'text-gray-400 hover:text-[#E31E24]'
@@ -97,19 +96,18 @@ function ProductsList() {
 
       {/* 2. SUB-CATEGORY BAR (Speciality Only) */}
       {(categoryParam === 'speciality-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
-        <div className="flex justify-center gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500">
-          <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
-          <button onClick={() => router.push('/products?category=coolant')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
-          <button onClick={() => router.push('/products?category=brake-fluid')} className={`px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'brake-fluid' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>BRAKE FLUIDS</button>
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
+          <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
+          <button onClick={() => router.push('/products?category=coolant')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
+          <button onClick={() => router.push('/products?category=brake-fluid')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'brake-fluid' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>BRAKE FLUIDS</button>
         </div>
       )}
 
       {/* 3. PRODUCT GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10 mb-24 min-h-[400px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div key={product.id} className="bg-white border border-gray-50 shadow-sm flex flex-col group hover:shadow-2xl transition-all duration-500 rounded-sm">
-              
               <Link href={`/product/${product.id}`} className="relative aspect-square bg-[#FBFBFC] flex items-center justify-center overflow-hidden cursor-pointer">
                  {product.image_url ? (
                    <Image 
@@ -123,22 +121,16 @@ function ProductsList() {
                    <div className="text-gray-300 text-[9px] uppercase font-black tracking-widest text-center px-4">Image Pending</div>
                  )}
               </Link>
-
               <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
+                <h3 className="text-[14px] md:text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
                   {product.name}
                 </h3>
-                
                 <div className="bg-[#F8F9FA] px-3 py-2 flex justify-between items-center mb-6 border-l-2 border-[#E31E24]">
                   <span className="text-[8px] font-bold text-gray-500 uppercase">{product.viscosity || 'TDS AVAILABLE'}</span>
                   <span className="text-[8px] font-black text-[#E31E24]">UAE GRADE</span>
                 </div>
-
                 <div className="mt-auto flex justify-between items-center">
-                  <Link 
-                    href={`/product/${product.id}`} 
-                    className="text-[9px] font-black text-[#2B99D6] hover:text-[#E31E24] uppercase tracking-widest transition-colors"
-                  >
+                  <Link href={`/product/${product.id}`} className="text-[9px] font-black text-[#2B99D6] hover:text-[#E31E24] uppercase tracking-widest transition-colors">
                     TECHNICAL SPECS
                   </Link>
                   <ChevronRight size={14} className="text-[#2B99D6] group-hover:translate-x-1 transition-transform" />
@@ -147,7 +139,7 @@ function ProductsList() {
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center py-24 bg-gray-50 rounded-sm border-2 border-dashed border-gray-200">
+          <div className="col-span-full text-center py-24 bg-gray-50 rounded-sm border-2 border-dashed border-gray-200 mx-4">
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No products found in this category</p>
           </div>
         )}
@@ -160,23 +152,20 @@ export default function ProductsPage() {
   return (
     <main className="bg-white min-h-screen">
       <Navbar />
-      
-      <section className="bg-[#0D243F] pt-40 pb-24 px-6 text-center">
+      <section className="bg-[#0D243F] pt-32 md:pt-40 pb-16 md:pb-24 px-6 text-center">
         <div className="max-w-[1300px] mx-auto">
-          <h1 className="text-4xl md:text-7xl font-black italic uppercase text-white tracking-tighter leading-none">
+          <h1 className="text-3xl md:text-7xl font-black italic uppercase text-white tracking-tighter leading-none">
             TECHNICAL <br />
             <span className="text-[#E31E24]">CATALOGUE</span>
           </h1>
-          <div className="w-20 h-1 bg-[#E31E24] mx-auto mt-8" />
+          <div className="w-16 md:w-20 h-1 bg-[#E31E24] mx-auto mt-6 md:mt-8" />
         </div>
       </section>
-
-      <div className="max-w-[1300px] mx-auto pt-16 px-6">
+      <div className="max-w-[1300px] mx-auto pt-10 md:pt-16 px-4 md:px-6">
         <Suspense fallback={<div className="text-center py-20 text-[10px] font-black uppercase">Syncing...</div>}>
           <ProductsList />
         </Suspense>
       </div>
-
       <Footer />
     </main>
   );
