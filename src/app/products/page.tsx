@@ -16,7 +16,7 @@ const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
   { id: 'truck-and-busses', name: 'TRUCKS & BUSSES' }, 
-  { id: 'motorcycle', name: 'MOTORCYCLE' },
+  { id: 'motor-cycle', name: 'MOTOR CYCLE' },
   { id: 'atf-and-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
