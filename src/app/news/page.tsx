@@ -1,36 +1,25 @@
+"use client";
+
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { client } from '@/sanity/client';
+import { newsArticles } from '@/data/news'; // Back to local data
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-export default async function NewsPage() {
-  // FETCH DATA FROM SANITY
-  const newsArticles = await client.fetch(`*[_type == "post"] | order(publishedAt desc){
-    title,
-    "slug": slug.current,
-    "image": mainImage.asset->url,
-    "category": categories[0]->title,
-    "date": publishedAt,
-    excerpt,
-    author->{name}
-  }`);
-
-  if (!newsArticles || newsArticles.length === 0) {
-    return <div className="py-40 text-center uppercase font-black">No Journal Entries Found</div>;
-  }
-
+export default function NewsPage() {
   const featuredArticle = newsArticles[0];
   const remainingArticles = newsArticles.slice(1);
 
+  // Helper to ensure paths work on subpages
+  const getImagePath = (path: string) => path.startsWith('/') ? path : `/${path}`;
+
   return (
-    <main className="bg-white min-h-screen">
+    <main className="bg-white min-h-screen pt-[120px]">
       <Navbar />
       
-      {/* SECTION 1: EDITORIAL HERO */}
-      <section className="bg-[#0D243F] pt-40 pb-20 px-6 overflow-hidden relative">
+      <section className="bg-[#0D243F] py-20 px-6 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-[#E31E24] opacity-5 -skew-x-12 translate-x-20" />
         <div className="max-w-[1300px] mx-auto relative z-10">
           <span className="text-[#E31E24] font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Insights & Intelligence</span>
@@ -40,19 +29,17 @@ export default async function NewsPage() {
         </div>
       </section>
 
-      {/* SECTION 2: FEATURED ARTICLE */}
+      {/* FEATURED ARTICLE */}
       <section className="py-20 px-6 -mt-10">
         <div className="max-w-[1300px] mx-auto">
           <Link href={`/news/${featuredArticle.slug}`} className="group flex flex-col lg:flex-row bg-white shadow-2xl overflow-hidden border border-gray-100">
-            <div className="lg:w-3/5 aspect-video lg:aspect-auto relative overflow-hidden bg-gray-100">
-              {featuredArticle.image && (
-                <Image 
-                  src={featuredArticle.image} 
-                  alt={featuredArticle.title} 
-                  fill 
-                  className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0" 
-                />
-              )}
+            <div className="lg:w-3/5 aspect-video relative overflow-hidden bg-gray-100">
+              <Image 
+                src={getImagePath(featuredArticle.image)} 
+                alt={featuredArticle.title} 
+                fill 
+                className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0" 
+              />
               <div className="absolute top-6 left-6 bg-[#E31E24] text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">LATEST UPDATE</div>
             </div>
             <div className="lg:w-2/5 p-12 md:p-16 flex flex-col justify-center">
@@ -69,36 +56,32 @@ export default async function NewsPage() {
         </div>
       </section>
 
-      {/* SECTION 3: ARTICLE GRID */}
+      {/* ARTICLE GRID */}
       <section className="py-20 px-6 bg-[#F8F9FA]">
-        <div className="max-w-[1300px] mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {remainingArticles.map((article: any, index: number) => (
-              <Link key={index} href={`/news/${article.slug}`} className="bg-white flex flex-col group border border-gray-100 hover:shadow-2xl transition-all duration-500">
-                <div className="aspect-video relative overflow-hidden bg-gray-100">
-                  {article.image && (
-                    <Image 
-                      src={article.image} 
-                      alt={article.title} 
-                      fill 
-                      className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-transform duration-700" 
-                    />
-                  )}
+        <div className="max-w-[1300px] mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {remainingArticles.map((article, index) => (
+            <Link key={index} href={`/news/${article.slug}`} className="bg-white flex flex-col group border border-gray-100 hover:shadow-2xl transition-all duration-500">
+              <div className="aspect-video relative overflow-hidden bg-gray-100">
+                <Image 
+                  src={getImagePath(article.image)} 
+                  alt={article.title} 
+                  fill 
+                  className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-transform duration-700" 
+                />
+              </div>
+              <div className="p-10 flex flex-col flex-1">
+                <span className="text-[9px] font-black text-[#2B99D6] uppercase tracking-widest mb-4">{article.category}</span>
+                <h3 className="font-black italic text-xl text-[#0D243F] mb-4 uppercase leading-tight group-hover:text-[#E31E24] transition-colors">
+                  {article.title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">{article.excerpt}</p>
+                <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between items-center text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                  <span>{article.date}</span>
+                  <span className="text-[#E31E24]">READ ARTICLE →</span>
                 </div>
-                <div className="p-10 flex flex-col flex-1">
-                  <span className="text-[9px] font-black text-[#2B99D6] uppercase tracking-widest mb-4">{article.category}</span>
-                  <h3 className="font-black italic text-xl text-[#0D243F] mb-4 uppercase leading-tight group-hover:text-[#E31E24] transition-colors">
-                    {article.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">{article.excerpt}</p>
-                  <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between items-center text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-                    <span>{new Date(article.date).toLocaleDateString()}</span>
-                    <span className="text-[#E31E24]">READ ARTICLE →</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
