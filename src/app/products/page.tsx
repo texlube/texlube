@@ -12,23 +12,12 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-<<<<<<< HEAD
-// IMPORTANT: These IDs must match the Sanity Slugs exactly
-const categories = [
-  { id: 'all-products', name: 'ALL PRODUCTS' },
-  { id: 'passenger-car', name: 'PASSENGER CAR' },
-  { id: 'truck-and-busses', name: 'TRUCKS & BUSSES' }, // Match: truck-and-busses
-  { id: 'motor-cycle', name: 'MOTOR CYCLE' },
-  { id: 'atf-and-gear', name: 'ATF & GEAR' },       // Match: atf-and-gear
-=======
-// UPDATED: Now matches both "truck-and-busses" and "atf-and-gear" slugs from Sanity
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
   { id: 'truck-and-busses', name: 'TRUCKS & BUSSES' }, 
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
-  { id: 'atf-and-gear', name: 'ATF & GEAR' }, // UPDATED SLUG HERE
->>>>>>> eff75f3522ff404797ee12bc8df0e1b716cf884a
+  { id: 'atf-and-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
   { id: 'speciality-oil', name: 'SPECIALITY OIL' },
@@ -38,8 +27,6 @@ const categories = [
 function ProductsList() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
-  // Default to all-products if no category is in the URL
   const categoryParam = searchParams.get('category') || 'all-products';
   
   const [products, setProducts] = useState<any[]>([]);
@@ -60,14 +47,7 @@ function ProductsList() {
         }`;
         
         const data = await client.fetch(query);
-<<<<<<< HEAD
-        
-        // Debug log to check slugs in VS Code / Browser Console
-        console.log("TexLube Data Sync:", data);
-        
-=======
         console.log("TexLube Debug - Fetched Products:", data);
->>>>>>> eff75f3522ff404797ee12bc8df0e1b716cf884a
         setProducts(data || []);
       } catch (error) {
         console.error("Sanity Fetch Error:", error);
@@ -78,10 +58,8 @@ function ProductsList() {
     fetchSanityProducts();
   }, []);
 
-  // ROBUST FILTERING LOGIC
   const filteredProducts = products.filter((p) => {
     const currentFilter = categoryParam.toLowerCase().trim();
-    
     if (currentFilter === 'all-products') return true;
 
     const pCat = p.categorySlug?.toLowerCase().trim();
@@ -99,10 +77,6 @@ function ProductsList() {
 
   return (
     <>
-<<<<<<< HEAD
-      {/* 1. MAIN CATEGORY TABS - MOBILE SCROLL FIXED */}
-=======
->>>>>>> eff75f3522ff404797ee12bc8df0e1b716cf884a
       <div className="border-b border-gray-100 mb-8 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => (
