@@ -57,9 +57,7 @@ export default function LatestMedia() {
           <p className="text-gray-600 mb-8 md:mb-10 leading-relaxed font-medium max-w-md mx-auto lg:mx-0 italic text-sm md:text-base">
             Our new video series takes you on an exhilarating adventure to explore the concept of "progress" from various angles, featuring tales of extraordinary individuals who embody the spirit of relentless pursuit.
           </p>
-          <button className="bg-[#2B99D6] text-white px-8 py-4 font-black uppercase text-[10px] tracking-widest flex items-center gap-3 hover:bg-[#E31E24] transition-all duration-300 self-center lg:self-start shadow-lg">
-            DISCOVER MORE <ChevronRight size={14} />
-          </button>
+          
         </div>
 
         {/* RIGHT SIDE: Media Grid */}
