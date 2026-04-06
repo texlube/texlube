@@ -14,7 +14,7 @@ const solutions = [
   {
     title: "OUR SOLUTIONS FOR TRUCKS & BUSSES",
     image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=800",
-    slug: "trucks-and-busses"
+    slug: "truck-and-busses"
   },
   {
     title: "OUR SOLUTIONS FOR MOTOR CYCLES",
