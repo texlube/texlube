@@ -4,13 +4,27 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound, useParams } from 'next/navigation';
-import { newsArticles } from '@/data/news'; // Back to local data
+import { newsArticles } from '@/data/news'; 
 import { ChevronLeft, Share2, Clock, ChevronRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// FIXED: Restored missing Icon definitions to prevent build crash
+const Facebook = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+);
+
+const Linkedin = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+);
+
+const Twitter = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+);
+
 export default function ArticlePage() {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug;
   const [readingProgress, setReadingProgress] = useState(0);
 
   const article = newsArticles.find((p) => p.slug === slug);
@@ -26,14 +40,12 @@ export default function ArticlePage() {
 
   if (!article) return notFound();
 
-  // Helper to ensure absolute pathing
   const getImagePath = (path: string) => path.startsWith('/') ? path : `/${path}`;
 
   return (
     <main className="bg-white min-h-screen pt-[120px] pb-24 relative">
       <Navbar />
       
-      {/* READING PROGRESS BAR */}
       <div className="fixed top-[105px] md:top-[115px] left-0 w-full h-[3px] bg-gray-100 z-[101]">
         <div className="h-full bg-[#E31E24] transition-all duration-150" style={{ width: `${readingProgress}%` }} />
       </div>
@@ -48,7 +60,7 @@ export default function ArticlePage() {
           {article.title}
         </h1>
 
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-y border-gray-100 py-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between border-y border-gray-100 py-6 gap-4">
           <div className="flex items-center gap-4">
              <div className="w-12 h-12 bg-[#F8F9FA] rounded-full flex items-center justify-center font-black text-[#0D243F] italic">TX</div>
              <div>
@@ -57,18 +69,19 @@ export default function ArticlePage() {
              </div>
           </div>
           <div className="flex items-center gap-5">
-            <button className="text-gray-300 hover:text-[#0D243F] transition-colors"><Share2 size={18} /></button>
+            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mr-2 hidden sm:block">SHARE REPORT</span>
+            <button className="text-gray-300 hover:text-[#0077b5] transition-colors"><Linkedin size={18} /></button>
+            <button className="text-gray-300 hover:text-[#1DA1F2] transition-colors"><Twitter size={18} /></button>
+            <button className="text-gray-300 hover:text-[#E31E24] transition-colors"><Share2 size={18} /></button>
           </div>
         </div>
       </div>
 
-      {/* HERO IMAGE */}
       <div className="w-full h-[50vh] md:h-[70vh] relative mb-20 bg-gray-100">
         <Image src={getImagePath(article.image)} alt={article.title} fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
       </div>
 
-      {/* CONTENT AREA */}
       <div className="max-w-[1300px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
         <div className="lg:col-span-3 sticky top-40 h-fit hidden lg:block">
            <h5 className="text-[10px] font-black text-[#E31E24] uppercase tracking-widest mb-4">Technical Summary</h5>
