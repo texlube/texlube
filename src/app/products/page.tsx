@@ -15,9 +15,9 @@ import Footer from '@/components/Footer';
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
-  { id: 'trucks-and-busses', name: 'TRUCKS & BUSSES' },
+  { id: 'trucks-busses', name: 'TRUCKS & BUSSES' },
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
-  { id: 'atf-and-gear', name: 'ATF & GEAR' },
+  { id: 'atf-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
   { id: 'speciality-oil', name: 'SPECIALITY OIL' },
