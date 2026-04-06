@@ -14,7 +14,7 @@ const solutions = [
   {
     title: "OUR SOLUTIONS FOR TRUCKS & BUSSES",
     image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=800",
-    slug: "trucks-busses"
+    slug: "trucks-and-busses"
   },
   {
     title: "OUR SOLUTIONS FOR MOTOR CYCLES",
@@ -24,7 +24,7 @@ const solutions = [
   {
     title: "OUR SOLUTIONS FOR ATF & GEAR",
     image: "https://images.unsplash.com/photo-1681113376967-1fcd00cf78ee?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    slug: "atf-gear"
+    slug: "atf-and-gear"
   },
   {
     title: "OUR SOLUTIONS FOR INDUSTRIAL",
@@ -39,7 +39,7 @@ const solutions = [
   {
     title: "OUR SOLUTIONS FOR SPECIALTY OIL",
     image: "https://images.unsplash.com/photo-1760804462141-442810513d4e?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    slug: "specialty-oil"
+    slug: "speciality-oil"
   },
   {
     title: "OUR SOLUTIONS FOR GREASES",
