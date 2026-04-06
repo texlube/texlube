@@ -38,22 +38,14 @@ export default function Footer() {
     { name: "ATF & Gear", slug: "atf-gear" },
     { name: "Industrial", slug: "industrial" },
     { name: "Hydraulic", slug: "hydraulic" },
-    { name: "Speciality Oil", slug: "speciality-oil" }, // FIXED: Corrected spelling/slug
+    { name: "Speciality Oil", slug: "speciality-oil" }, 
     { name: "Greases", slug: "greases" },
   ];
 
   const handleCatalogDownload = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    
     setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = '/texlube-full-catalog.pdf'; 
-      link.download = 'TEXLUBE_Full_Product_Catalog.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
       setFormSubmitted(false);
       setShowForm(false);
       setIsModalOpen(false);
@@ -69,7 +61,7 @@ export default function Footer() {
           <div className="flex flex-col gap-6 md:gap-8 items-center md:items-start text-center md:text-left">
             <Link href="/" className="inline-block group">
               <div className="relative w-[160px] md:w-[180px] h-[45px] md:h-[50px]">
-                <Image src="/logo.png" alt="TEXLUBE Logo" fill className="object-contain object-center md:object-left transition-opacity group-hover:opacity-80" priority />
+                <Image src="/logo.png" alt="TEXLUBE Logo" fill className="object-contain object-center md:object-left" priority />
               </div>
             </Link>
             <p className="text-blue-100/60 text-xs leading-relaxed font-medium max-w-sm">
@@ -79,7 +71,16 @@ export default function Footer() {
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Linkedin size={14} /></a>
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Instagram size={14} /></a>
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Facebook size={14} /></a>
-              <a href="https://wa.me/97161234567" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#25D366] hover:text-white transition-all"><MessageCircle size={14} /></a>
+              
+              {/* UPDATED WHATSAPP LINK */}
+              <a 
+                href="https://wa.me/971554715123" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#25D366] hover:text-white transition-all"
+              >
+                <MessageCircle size={14} />
+              </a>
             </div>
           </div>
 
@@ -89,8 +90,7 @@ export default function Footer() {
             <ul className="grid grid-cols-2 sm:grid-cols-1 gap-3">
               {footerProducts.map((item) => (
                 <li key={item.slug}>
-                  <Link href={`/products?category=${item.slug}`} className="text-[11px] font-bold text-gray-400 hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">
-                    <ChevronRight size={10} className="text-[#E31E24] hidden md:block opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" /> 
+                  <Link href={`/products?category=${item.slug}`} className="text-[11px] font-bold text-gray-400 hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors uppercase tracking-widest">
                     {item.name}
                   </Link>
                 </li>
@@ -102,17 +102,12 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2B99D6] mb-6 md:mb-8">COMPANY</h4>
             <ul className="flex flex-col gap-4">
-              <li><Link href="/about" className="text-xs font-bold text-gray-400 hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">About</Link></li>
-              <li><Link href="/contact" className="text-xs font-bold text-gray-400 hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">Contact</Link></li>
-              <li><Link href="/technology" className="text-xs font-bold text-gray-400 hover:text-white flex items-center justify-center md:justify-start gap-2 group transition-colors">Why Texlube</Link></li>
-              
-              <li className="pt-4 mt-2 border-t border-white/5">
-                <button 
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-[11px] font-black text-[#E31E24] hover:text-white flex items-center justify-center md:justify-start gap-3 group transition-colors uppercase tracking-widest mx-auto md:mx-0"
-                >
-                  <Download size={14} className="group-hover:translate-y-1 transition-transform" />
-                  DOWNLOAD CATALOG
+              <li><Link href="/about" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Contact</Link></li>
+              <li><Link href="/technology" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Why Texlube</Link></li>
+              <li className="pt-4">
+                <button onClick={() => setIsModalOpen(true)} className="text-[11px] font-black text-[#E31E24] hover:text-white flex items-center justify-center md:justify-start gap-3 uppercase tracking-widest mx-auto md:mx-0">
+                  <Download size={14} /> DOWNLOAD CATALOG
                 </button>
               </li>
             </ul>
@@ -123,74 +118,44 @@ export default function Footer() {
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2B99D6] mb-6 md:mb-8">CONTACT HUB</h4>
             <ul className="flex flex-col gap-6">
               <li className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
-                <MapPin size={16} className="text-[#E31E24] shrink-0" />
-                <span className="text-xs text-gray-400 leading-relaxed font-medium">Ajman Industrial Area 1,<br className="hidden md:block" /> United Arab Emirates</span>
+                <MapPin size={16} className="text-[#E31E24]" />
+                <span className="text-xs text-gray-400 font-medium">Ajman Industrial Area 1,<br /> United Arab Emirates</span>
               </li>
               <li className="flex flex-col md:flex-row items-center md:items-start gap-3 md:gap-4">
-                <Phone size={16} className="text-[#E31E24] shrink-0" />
-                <span className="text-xs text-gray-400 font-medium">+971 6 123 4567</span>
+                <Phone size={16} className="text-[#E31E24]" />
+                <span className="text-xs text-gray-400 font-medium">+971 6 529 5105</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="pt-12 border-t border-white/5 text-center md:text-left">
+        {/* BOTTOM BAR - Centered and Added Growize Digital Credit */}
+        <div className="pt-12 border-t border-white/5 flex flex-col items-center justify-center gap-6 text-center">
           <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
             © {currentYear} TEXLUBE LUBRICANTS. ALL RIGHTS RESERVED.
           </p>
+          
+          {/* GROWIZE DIGITAL CREDIT */}
+          <Link 
+            href="https://gro-wize.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-[#E31E24] transition-all duration-300"
+          >
+            DEVELOPED BY <span className="text-white group-hover:text-[#E31E24]">GROWIZE DIGITAL</span>
+          </Link>
         </div>
       </div>
 
-      {/* --- GATED CATALOG MODAL (Responsive Redesign) --- */}
+      {/* MODAL PLACEHOLDER */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 md:p-6 bg-[#0b131e]/95 backdrop-blur-md">
-          <div className="bg-white w-full max-w-xl relative shadow-2xl rounded-sm p-8 md:p-14 animate-in fade-in zoom-in duration-300 max-h-[90vh] overflow-y-auto">
-            <button 
-              onClick={() => {setIsModalOpen(false); setShowForm(false);}} 
-              className="absolute top-4 right-4 md:top-8 md:right-8 text-gray-300 hover:text-[#0D243F] transition-colors"
-            >
-              <X size={24}/>
-            </button>
-            <div className="text-center">
-              <h4 className="text-[9px] md:text-[10px] font-black text-[#E31E24] uppercase tracking-[0.4em] mb-4">BUSINESS INTELLIGENCE</h4>
-              <h5 className="text-2xl md:text-3xl font-black italic uppercase text-[#0D243F] mb-6 md:mb-10 leading-tight">ACCESS FULL CATALOG</h5>
-              
-              {!showForm ? (
-                <div className="space-y-6 md:space-y-8">
-                  <p className="text-gray-500 text-xs md:text-sm leading-relaxed font-medium">Please provide your professional contact details to download the complete **TEXLUBE High-Performance Catalog**.</p>
-                  <button onClick={() => setShowForm(true)} className="w-full bg-[#E31E24] text-white py-4 md:py-5 font-black uppercase text-[10px] md:text-[11px] tracking-widest flex items-center justify-center gap-4 hover:bg-[#0D243F] transition-all shadow-xl">
-                    GET THE CATALOG <Download size={18} />
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleCatalogDownload} className="space-y-4 text-left">
-                  <div className="space-y-1">
-                    <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
-                    <input required type="text" className="w-full bg-[#F5F5F7] p-3 md:p-4 text-[10px] font-bold uppercase outline-none focus:ring-2 focus:ring-[#2B99D6] text-[#0D243F]" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-1">Business Email</label>
-                      <input required type="email" className="w-full bg-[#F5F5F7] p-3 md:p-4 text-[10px] font-bold uppercase outline-none focus:ring-2 focus:ring-[#2B99D6] text-[#0D243F]" />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
-                      <input required type="tel" placeholder="+971" className="w-full bg-[#F5F5F7] p-3 md:p-4 text-[10px] font-bold uppercase outline-none focus:ring-2 focus:ring-[#2B99D6] text-[#0D243F]" />
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-[8px] font-black text-gray-400 uppercase tracking-widest ml-1">Company</label>
-                    <input required type="text" className="w-full bg-[#F5F5F7] p-3 md:p-4 text-[10px] font-bold uppercase outline-none focus:ring-2 focus:ring-[#2B99D6] text-[#0D243F]" />
-                  </div>
-                  <button disabled={formSubmitted} className="w-full bg-[#0D243F] text-white py-4 md:py-5 mt-4 font-black uppercase text-[10px] md:text-[11px] tracking-widest flex items-center justify-center gap-4 hover:bg-[#E31E24] transition-all disabled:opacity-50 shadow-xl">
-                    {formSubmitted ? <CheckCircle size={18} /> : <Download size={18} />}
-                    {formSubmitted ? "LOGGING LEAD..." : "CONFIRM & DOWNLOAD"}
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-[#0b131e]/95 backdrop-blur-md">
+           <div className="bg-white p-10 max-w-md w-full relative text-center">
+              <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400"><X size={20}/></button>
+              <h5 className="text-[#0D243F] font-black uppercase mb-4">Request Catalog</h5>
+              <p className="text-gray-500 text-xs mb-6">Enter details to access the full technical document.</p>
+              <button onClick={handleCatalogDownload} className="w-full bg-[#E31E24] text-white py-4 font-black uppercase text-[10px]">Confirm Download</button>
+           </div>
         </div>
       )}
     </footer>

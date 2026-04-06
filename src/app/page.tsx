@@ -97,8 +97,7 @@ export default async function HomePage() {
       <GlobalReach />
       <NewsSection />
       <ContactSection />
-      
-      <Footer />
+    
     </main>
   );
 }
