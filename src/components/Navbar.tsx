@@ -8,21 +8,21 @@ import {
   Phone, 
   Mail, 
   ChevronRight,
-  Menu, // Added
-  X     // Added
+  Menu,
+  X 
 } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
 const productCategories = [
   { name: "Passenger Car", slug: "passenger-car" },
-  { name: "Trucks & Busses", slug: "trucks-busses" },
+  { name: "Trucks & Busses", slug: "truck-and-busses" }, // Updated to match Sanity
   { name: "Motor Cycle", slug: "motor-cycle" },
-  { name: "ATF & Gear", slug: "atf-gear" },
+  { name: "ATF & Gear", slug: "atf-and-gear" },      // Updated to match Sanity
   { name: "Industrial", slug: "industrial" },
   { name: "Hydraulic", slug: "hydraulic" },
   { 
-    name: "Speciality Oil", // Updated Spelling
-    slug: "speciality-oil", // Updated Slug
+    name: "Speciality Oil", 
+    slug: "speciality-oil", // Fixed spelling
     hasSub: true,
     subItems: [
       { name: "Coolant", slug: "coolant" },
@@ -40,12 +40,12 @@ export default function Navbar() {
     <>
       <header className="fixed top-0 left-0 w-full z-[100]">
         
-        {/* 1. TOP UTILITY BAR - Optimized for Mobile */}
+        {/* 1. TOP UTILITY BAR */}
         <div className="w-full bg-[#12223b] text-white py-2.5 px-6 border-b border-white/5">
           <div className="max-w-[1300px] mx-auto flex justify-center items-center gap-4 md:gap-16">
-            <a href="tel:+97161234567" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
+            <a href="tel:+97165295105" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
               <Phone size={12} className="text-[#2B99D6]" />
-              <span className="text-[9px] md:text-[10px] font-regular tracking-[0.1em]">+971 6 123 4567</span>
+              <span className="text-[9px] md:text-[10px] font-regular tracking-[0.1em]">+971 6 529 5105</span>
             </a>
             <div className="w-[1px] h-3 bg-white/10"></div>
             <a href="mailto:info@texlubricant.com" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
@@ -60,17 +60,21 @@ export default function Navbar() {
           <div className="max-w-[1300px] mx-auto px-6 flex items-center justify-between h-[70px] md:h-[80px]">
             
             {/* LOGO */}
-            <Link href="/" className="relative flex items-center h-full">
+            <Link href="/" className="relative flex items-center h-full" onClick={() => setIsMobileMenuOpen(false)}>
               <div className="relative w-[150px] md:w-[220px] h-[40px] md:h-[50px] transition-transform duration-300 hover:scale-105">
                 <Image src="/logo.png" alt="TEXLUBE" fill className="object-contain" priority />
               </div>
             </Link>
 
-            {/* DESKTOP LINKS (Hidden on Mobile) */}
+            {/* DESKTOP LINKS */}
             <div className="hidden lg:flex items-center gap-10 h-full">
-              {/* PRODUCTS DROPDOWN */}
+              
+              {/* PRODUCTS DROPDOWN - Points to all-products by default */}
               <div className="relative group flex items-center h-full">
-                <Link href="/products" className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full">
+                <Link 
+                  href="/products?category=all-products" 
+                  className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full"
+                >
                   PRODUCTS
                   <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 opacity-50" />
                 </Link>
@@ -79,7 +83,10 @@ export default function Navbar() {
                   <div className="flex flex-col py-2">
                     {productCategories.map((cat) => (
                       <div key={cat.slug} className="relative group/specialty">
-                        <Link href={`/products?category=${cat.slug}`} className="flex items-center justify-between px-8 py-4 text-[10px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0">
+                        <Link 
+                          href={`/products?category=${cat.slug}`}
+                          className="flex items-center justify-between px-8 py-4 text-[10px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0"
+                        >
                           {cat.name}
                           {cat.hasSub && <ChevronRight size={12} className="text-gray-300" />}
                         </Link>
@@ -100,7 +107,6 @@ export default function Navbar() {
                 </div>
               </div>
 
-              {/* WHY TEXLUBE DROPDOWN */}
               <div className="relative group flex items-center h-full">
                 <Link href="/technology" className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full">
                   WHY TEXLUBE
@@ -128,26 +134,25 @@ export default function Navbar() {
                 REQUEST A QUOTE
               </button>
 
-              {/* MOBILE HAMBURGER TOGGLE */}
               <button 
                 className="lg:hidden text-[#0D243F] p-2"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle Mobile Menu"
               >
                 {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
-
           </div>
 
           {/* MOBILE MENU DRAWER */}
           {isMobileMenuOpen && (
-            <div className="lg:hidden bg-white border-t border-gray-100 absolute top-full left-0 w-full shadow-xl animate-in slide-in-from-top duration-300">
+            <div className="lg:hidden bg-white border-t border-gray-100 absolute top-full left-0 w-full shadow-xl animate-in slide-in-from-top duration-300 overflow-y-auto max-h-[80vh]">
               <div className="flex flex-col p-6 gap-4">
-                <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Products</Link>
+                <Link href="/products?category=all-products" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Products</Link>
                 <Link href="/technology" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Why Texlube</Link>
-                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">About Us</Link>
-                <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">News</Link>
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Contact</Link>
+                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-100 pb-3">About Us</Link>
+                <Link href="/news" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-100 pb-3">News</Link>
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-100 pb-3">Contact</Link>
                 <button 
                    onClick={() => {setIsQuoteOpen(true); setIsMobileMenuOpen(false);}}
                    className="w-full bg-[#E31E24] text-white py-4 text-[10px] font-black uppercase tracking-widest rounded-sm mt-2"
