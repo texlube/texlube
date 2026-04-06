@@ -12,12 +12,13 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+// UPDATED: Now matches both "truck-and-busses" and "atf-and-gear" slugs from Sanity
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
   { id: 'passenger-car', name: 'PASSENGER CAR' },
-  { id: 'trucks-busses', name: 'TRUCKS & BUSSES' },
+  { id: 'truck-and-busses', name: 'TRUCKS & BUSSES' }, 
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
-  { id: 'atf-gear', name: 'ATF & GEAR' },
+  { id: 'atf-and-gear', name: 'ATF & GEAR' }, // UPDATED SLUG HERE
   { id: 'industrial', name: 'INDUSTRIAL' },
   { id: 'hydraulic', name: 'HYDRAULIC' },
   { id: 'speciality-oil', name: 'SPECIALITY OIL' },
@@ -47,6 +48,7 @@ function ProductsList() {
         }`;
         
         const data = await client.fetch(query);
+        console.log("TexLube Debug - Fetched Products:", data);
         setProducts(data || []);
       } catch (error) {
         console.error("Sanity Fetch Error:", error);
@@ -71,9 +73,7 @@ function ProductsList() {
 
   return (
     <>
-      {/* 1. MAIN CATEGORY TABS - FIXED SCROLLING ISSUE */}
       <div className="border-b border-gray-100 mb-8 overflow-x-auto no-scrollbar">
-        {/* Added justify-start for mobile and min-w-max to prevent clipping */}
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => (
             <button 
@@ -94,7 +94,6 @@ function ProductsList() {
         </div>
       </div>
 
-      {/* 2. SUB-CATEGORY BAR (Speciality Only) */}
       {(categoryParam === 'speciality-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
           <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
@@ -103,7 +102,6 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 3. PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
@@ -166,7 +164,7 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
-
+      <Footer />
     </main>
   );
 }
