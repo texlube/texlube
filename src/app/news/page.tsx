@@ -10,17 +10,27 @@ export default function NewsPage() {
   const featuredArticle = newsArticles[0];
   const remainingArticles = newsArticles.slice(1);
 
-  const getImagePath = (path: string) => {
-    if (!path) return '/placeholder.jpg';
-    const cleanPath = path.trim();
-    if (cleanPath.startsWith('http')) return cleanPath;
+  // THE ULTIMATE PATH FIXER (Same as Article Page)
+  const getImagePath = (path: any) => {
+    if (!path) return '/logo.png';
+    
+    // 1. Handle Unsplash/External Links
+    if (typeof path === 'string' && path.includes('http')) {
+      return path.trim();
+    }
+    
+    // 2. Handle local paths (ensure they start with /)
+    const cleanPath = path.toString().trim();
     return cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
   };
 
   return (
     <main className="bg-white min-h-screen pt-[120px]">
       <Navbar />
+      
+      {/* HERO SECTION */}
       <section className="bg-[#0D243F] py-20 px-6 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-[#E31E24] opacity-5 -skew-x-12 translate-x-20" />
         <div className="max-w-[1300px] mx-auto relative z-10">
           <span className="text-[#E31E24] font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Insights & Intelligence</span>
           <h1 className="text-5xl md:text-7xl font-black italic uppercase text-white tracking-tighter leading-none mb-8">
@@ -29,6 +39,7 @@ export default function NewsPage() {
         </div>
       </section>
 
+      {/* FEATURED ARTICLE */}
       <section className="py-20 px-6 -mt-10">
         <div className="max-w-[1300px] mx-auto">
           <Link href={`/news/${featuredArticle.slug}`} className="group flex flex-col lg:flex-row bg-white shadow-2xl overflow-hidden border border-gray-100">
@@ -38,19 +49,26 @@ export default function NewsPage() {
                 alt={featuredArticle.title} 
                 fill 
                 className="object-cover transition-transform duration-1000 group-hover:scale-105" 
-                unoptimized={featuredArticle.image.includes('unsplash')}
+                priority
+                unoptimized // Bypasses strict Vercel optimization for external/complex paths
               />
+              <div className="absolute top-6 left-6 bg-[#E31E24] text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">LATEST</div>
             </div>
             <div className="lg:w-2/5 p-12 md:p-16 flex flex-col justify-center">
               <span className="text-[10px] font-black text-[#2B99D6] uppercase tracking-[0.3em] mb-6">{featuredArticle.category}</span>
-              <h2 className="text-3xl md:text-4xl font-black italic text-[#0D243F] uppercase mb-6 group-hover:text-[#E31E24] transition-colors">{featuredArticle.title}</h2>
-              <p className="text-gray-500 mb-10 line-clamp-4">{featuredArticle.excerpt}</p>
-              <div className="flex items-center gap-4 text-[11px] font-black uppercase tracking-widest text-[#0D243F]">READ FULL STORY <ArrowRight size={18} /></div>
+              <h2 className="text-3xl md:text-4xl font-black italic text-[#0D243F] uppercase mb-6 leading-tight group-hover:text-[#E31E24] transition-colors">
+                {featuredArticle.title}
+              </h2>
+              <p className="text-gray-500 mb-10 leading-relaxed line-clamp-4">{featuredArticle.excerpt}</p>
+              <div className="flex items-center gap-4 text-[11px] font-black uppercase tracking-widest text-[#0D243F]">
+                READ FULL STORY <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform text-[#E31E24]" />
+              </div>
             </div>
           </Link>
         </div>
       </section>
 
+      {/* ARTICLE GRID */}
       <section className="py-20 px-6 bg-[#F8F9FA] pb-32">
         <div className="max-w-[1300px] mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {remainingArticles.map((article, index) => (
@@ -60,23 +78,26 @@ export default function NewsPage() {
                   src={getImagePath(article.image)} 
                   alt={article.title} 
                   fill 
-                  className="object-cover group-hover:scale-110 transition-transform duration-700" 
-                  unoptimized={article.image.includes('unsplash')}
+                  className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-transform duration-700" 
+                  unoptimized
                 />
               </div>
               <div className="p-10 flex flex-col flex-1">
-                <span className="text-[9px] font-black text-[#2B99D6] uppercase mb-4">{article.category}</span>
-                <h3 className="font-black italic text-xl text-[#0D243F] mb-4 uppercase group-hover:text-[#E31E24]">{article.title}</h3>
-                <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between text-[10px] font-bold text-gray-300">
+                <span className="text-[9px] font-black text-[#2B99D6] uppercase tracking-widest mb-4">{article.category}</span>
+                <h3 className="font-black italic text-xl text-[#0D243F] mb-4 uppercase leading-tight group-hover:text-[#E31E24] transition-colors">
+                  {article.title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">{article.excerpt}</p>
+                <div className="mt-auto pt-6 border-t border-gray-50 flex justify-between items-center text-[10px] font-bold text-gray-300 uppercase tracking-widest">
                   <span>{article.date}</span>
-                  <span className="text-[#E31E24]">READ MORE →</span>
+                  <span className="text-[#E31E24]">READ ARTICLE →</span>
                 </div>
               </div>
             </Link>
           ))}
         </div>
       </section>
-      <Footer />
+
     </main>
   );
 }
