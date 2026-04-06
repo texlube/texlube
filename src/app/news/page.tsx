@@ -9,16 +9,27 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 export default function NewsPage() {
+  // Safety: ensure we have articles
+  if (!newsArticles || newsArticles.length === 0) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-[10px] font-black uppercase tracking-widest">No articles found.</p>
+      </main>
+    );
+  }
+
   const featuredArticle = newsArticles[0];
   const remainingArticles = newsArticles.slice(1);
 
+  // Helper to ensure paths work on nested routes
   const getImagePath = (path: string) => path.startsWith('/') ? path : `/${path}`;
 
   return (
-    <main className="bg-white min-h-screen pt-[120px]">
+    <main className="bg-white min-h-screen">
       <Navbar />
       
-      <section className="bg-[#0D243F] py-20 px-6 overflow-hidden relative">
+      {/* HERO */}
+      <section className="bg-[#0D243F] pt-40 pb-20 px-6 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-[#E31E24] opacity-5 -skew-x-12 translate-x-20" />
         <div className="max-w-[1300px] mx-auto relative z-10">
           <span className="text-[#E31E24] font-black text-[10px] tracking-[0.4em] uppercase mb-4 block">Insights & Intelligence</span>
@@ -28,7 +39,7 @@ export default function NewsPage() {
         </div>
       </section>
 
-      {/* FEATURED ARTICLE */}
+      {/* FEATURED */}
       <section className="py-20 px-6 -mt-10">
         <div className="max-w-[1300px] mx-auto">
           <Link href={`/news/${featuredArticle.slug}`} className="group flex flex-col lg:flex-row bg-white shadow-2xl overflow-hidden border border-gray-100">
@@ -39,7 +50,7 @@ export default function NewsPage() {
                 fill 
                 className="object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0" 
               />
-              <div className="absolute top-6 left-6 bg-[#E31E24] text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">LATEST UPDATE</div>
+              <div className="absolute top-6 left-6 bg-[#E31E24] text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest">LATEST</div>
             </div>
             <div className="lg:w-2/5 p-12 md:p-16 flex flex-col justify-center">
               <span className="text-[10px] font-black text-[#2B99D6] uppercase tracking-[0.3em] mb-6">{featuredArticle.category}</span>
