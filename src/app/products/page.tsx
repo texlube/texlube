@@ -24,6 +24,10 @@ const categories = [
   { id: 'greases', name: 'GREASES' },
 ];
 
+// Helper to check sub-category groups
+const passengerSubs = ['semi-synthetic', 'fully-synthetic', 'mineral'];
+const specialitySubs = ['coolant', 'brake-fluid'];
+
 function ProductsList() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -47,7 +51,6 @@ function ProductsList() {
         }`;
         
         const data = await client.fetch(query);
-        console.log("TexLube Debug - Fetched Products:", data);
         setProducts(data || []);
       } catch (error) {
         console.error("Sanity Fetch Error:", error);
@@ -77,28 +80,46 @@ function ProductsList() {
 
   return (
     <>
+      {/* MAIN CATEGORY NAV */}
       <div className="border-b border-gray-100 mb-8 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
-          {categories.map((cat) => (
-            <button 
-              key={cat.id} 
-              onClick={() => router.push(`/products?category=${cat.id}`, { scroll: false })} 
-              className={`pb-5 text-[10px] font-black tracking-[0.2em] relative transition-all ${
-                categoryParam === cat.id || (cat.id === 'speciality-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))
-                ? 'text-[#0D243F]' 
-                : 'text-gray-400 hover:text-[#E31E24]'
-              }`}
-            >
-              {cat.name}
-              {(categoryParam === cat.id || (cat.id === 'speciality-oil' && (categoryParam === 'coolant' || categoryParam === 'brake-fluid'))) && (
-                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E31E24]" />
-              )}
-            </button>
-          ))}
+          {categories.map((cat) => {
+            // Logic to keep parent active if sub-category is selected
+            const isPassengerActive = cat.id === 'passenger-car' && (categoryParam === 'passenger-car' || passengerSubs.includes(categoryParam));
+            const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
+            const isDirectActive = categoryParam === cat.id;
+            const isActive = isDirectActive || isPassengerActive || isSpecialityActive;
+
+            return (
+              <button 
+                key={cat.id} 
+                onClick={() => router.push(`/products?category=${cat.id}`, { scroll: false })} 
+                className={`pb-5 text-[10px] font-black tracking-[0.2em] relative transition-all ${
+                  isActive ? 'text-[#0D243F]' : 'text-gray-400 hover:text-[#E31E24]'
+                }`}
+              >
+                {cat.name}
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E31E24]" />
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {(categoryParam === 'speciality-oil' || categoryParam === 'coolant' || categoryParam === 'brake-fluid') && (
+      {/* PASSENGER CAR SUB-CATEGORIES */}
+      {(categoryParam === 'passenger-car' || passengerSubs.includes(categoryParam)) && (
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
+          <button onClick={() => router.push('/products?category=passenger-car')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'passenger-car' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL PASSENGER</button>
+          <button onClick={() => router.push('/products?category=fully-synthetic')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'fully-synthetic' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>FULLY SYNTHETIC</button>
+          <button onClick={() => router.push('/products?category=semi-synthetic')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'semi-synthetic' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>SEMI SYNTHETIC</button>
+          <button onClick={() => router.push('/products?category=mineral')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'mineral' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>MINERAL</button>
+        </div>
+      )}
+
+      {/* SPECIALITY OIL SUB-CATEGORIES */}
+      {(categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam)) && (
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
           <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
           <button onClick={() => router.push('/products?category=coolant')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
@@ -106,6 +127,7 @@ function ProductsList() {
         </div>
       )}
 
+      {/* PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (

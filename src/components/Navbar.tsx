@@ -13,16 +13,26 @@ import {
 } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
+// UPDATED: Added sub-categories for Passenger Car to match Sanity structure
 const productCategories = [
-  { name: "Passenger Car", slug: "passenger-car" },
-  { name: "Trucks & Busses", slug: "truck-and-busses" }, // Updated to match Sanity
+  { 
+    name: "Passenger Car", 
+    slug: "passenger-car",
+    hasSub: true,
+    subItems: [
+      { name: "Fully Synthetic", slug: "fully-synthetic" },
+      { name: "Semi Synthetic", slug: "semi-synthetic" },
+      { name: "Mineral", slug: "mineral" }
+    ]
+  },
+  { name: "Trucks & Busses", slug: "truck-and-busses" },
   { name: "Motor Cycle", slug: "motor-cycle" },
-  { name: "ATF & Gear", slug: "atf-and-gear" },      // Updated to match Sanity
+  { name: "ATF & Gear", slug: "atf-and-gear" },
   { name: "Industrial", slug: "industrial" },
   { name: "Hydraulic", slug: "hydraulic" },
   { 
     name: "Speciality Oil", 
-    slug: "speciality-oil", // Fixed spelling
+    slug: "speciality-oil",
     hasSub: true,
     subItems: [
       { name: "Coolant", slug: "coolant" },
@@ -69,7 +79,7 @@ export default function Navbar() {
             {/* DESKTOP LINKS */}
             <div className="hidden lg:flex items-center gap-10 h-full">
               
-              {/* PRODUCTS DROPDOWN - Points to all-products by default */}
+              {/* PRODUCTS DROPDOWN */}
               <div className="relative group flex items-center h-full">
                 <Link 
                   href="/products?category=all-products" 
@@ -82,7 +92,7 @@ export default function Navbar() {
                 <div className="absolute top-full left-0 w-72 bg-white shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border-t-4 border-[#E31E24]">
                   <div className="flex flex-col py-2">
                     {productCategories.map((cat) => (
-                      <div key={cat.slug} className="relative group/specialty">
+                      <div key={cat.slug} className="relative group/sub">
                         <Link 
                           href={`/products?category=${cat.slug}`}
                           className="flex items-center justify-between px-8 py-4 text-[10px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0"
@@ -90,11 +100,17 @@ export default function Navbar() {
                           {cat.name}
                           {cat.hasSub && <ChevronRight size={12} className="text-gray-300" />}
                         </Link>
+                        
+                        {/* SECONDARY FLYOUT MENU (For Passenger Car & Speciality Oil) */}
                         {cat.hasSub && (
-                          <div className="absolute top-0 left-full w-64 bg-white shadow-2xl opacity-0 invisible group-hover/specialty:opacity-100 group-hover/specialty:visible transition-all duration-300 border-l border-gray-100">
+                          <div className="absolute top-0 left-full w-64 bg-white shadow-2xl opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-300 border-l border-gray-100">
                             <div className="flex flex-col py-2">
                               {cat.subItems?.map((sub) => (
-                                <Link key={sub.slug} href={`/products?category=${sub.slug}`} className="px-8 py-4 text-[10px] font-black text-gray-500 hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0">
+                                <Link 
+                                  key={sub.slug} 
+                                  href={`/products?category=${sub.slug}`} 
+                                  className="px-8 py-4 text-[10px] font-black text-gray-500 hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50 last:border-0"
+                                >
                                   {sub.name}
                                 </Link>
                               ))}

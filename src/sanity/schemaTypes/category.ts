@@ -25,7 +25,7 @@ export default defineType({
       title: 'Parent Category',
       type: 'reference',
       to: [{ type: 'category' }],
-      description: 'Leave empty for main categories. Select "Specialty Oil" for Coolants/Brake Fluids.',
+      description: 'Leave empty for main categories. Select "Speciality Oil" for Coolants/Brake Fluids.',
     }),
     defineField({
       name: 'description',
