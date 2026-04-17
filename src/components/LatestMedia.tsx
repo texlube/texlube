@@ -28,7 +28,7 @@ export default function LatestMedia() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [activeModalVideo, setActiveModalVideo] = useState<string | null>(null);
 
-  const mainVideoId = "dQw4w9WgXcQ"; 
+  const mainVideoId = "Ztp82cbPFjk"; 
 
   const industryVideos = [
     { id: '4Fmmg135QJQ', title: 'Lubricant Blending', desc: 'Technical' },
