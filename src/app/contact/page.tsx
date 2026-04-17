@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, Globe } from 'lucide-react';
 
 export default function ContactPage() {
   return (
@@ -9,7 +9,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=2000" 
-            alt="NEWLUBE Global Export" 
+            alt="TEXLUBE Global Export" 
             className="w-full h-full object-cover opacity-20 mix-blend-overlay"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#002e5b] via-[#002e5b]/80 to-transparent"></div>
@@ -25,7 +25,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* 2. Main Contact Section (Form & Details) */}
+      {/* 2. Main Contact Section (Form & HQ Details) */}
       <section className="py-24 px-6">
         <div className="max-w-[1300px] mx-auto grid lg:grid-cols-2 gap-16">
           
@@ -82,17 +82,16 @@ export default function ContactPage() {
             </form>
           </div>
 
-          {/* Right Side: Contact Details */}
+          {/* Right Side: Contact Details (UAE HQ) */}
           <div className="flex flex-col justify-center">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#2B99D6] mb-4">
               GLOBAL HEADQUARTERS
             </h2>
-            <h3 className="text-3xl font-black  uppercase tracking-tighter text-[#0D243F] mb-10 leading-tight">
+            <h3 className="text-3xl font-black uppercase tracking-tighter text-[#0D243F] mb-10 leading-tight italic">
              DUBAI BUSINESS HUB
             </h3>
 
             <div className="flex flex-col gap-10">
-              
               {/* Address */}
               <div className="flex items-start gap-6 group">
                 <div className="w-12 h-12 bg-[#F5F5F7] flex items-center justify-center text-[#E31E24] shrink-0 group-hover:bg-[#E31E24] group-hover:text-white transition-colors duration-300">
@@ -100,9 +99,9 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-[#0D243F] mb-2 uppercase tracking-wide">Facility Address</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    Bur Dubai<br />
-                    Dubai, United Arab Emirates
+                  <p className="text-sm text-gray-500 leading-relaxed uppercase font-medium">
+                    Ajman Industrial Area 1,<br />
+                    P.O. Box 4140, Ajman, UAE
                   </p>
                 </div>
               </div>
@@ -115,10 +114,10 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-bold text-[#0D243F] mb-2 uppercase tracking-wide">Direct Lines</h4>
                   <p className="text-sm text-gray-500 leading-relaxed mb-1">
-                    <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">Export Sales:</span> +971 55471 5123
+                    <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">Export Sales:</span> +971 55 471 5123
                   </p>
                   <p className="text-sm text-gray-500 leading-relaxed">
-                    <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">Technical:</span> +971 6 123 4568
+                    <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">Technical:</span> +971 6 529 5105
                   </p>
                 </div>
               </div>
@@ -130,11 +129,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-[#0D243F] mb-2 uppercase tracking-wide">Email Desks</h4>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-1">
+                  <p className="text-sm text-gray-500 leading-relaxed mb-1 lowercase">
                     <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">General:</span> info@texlubricant.com
-                  </p>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    <span className="font-bold text-gray-400 text-[10px] uppercase tracking-widest mr-2">Sales:</span> sales@texlubricant.com
                   </p>
                 </div>
               </div>
@@ -148,17 +144,88 @@ export default function ContactPage() {
                   <h4 className="font-bold text-[#0D243F] mb-2 uppercase tracking-wide">Operating Hours</h4>
                   <p className="text-sm text-gray-500 leading-relaxed">
                     Monday – Saturday: 08:00 AM – 06:00 PM (GST)<br />
-                   Sunday: Closed
+                    Sunday: Closed
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </section>
-      {/* 3. NEW: GLOBAL REACH SECTION */}
+
+      {/* NEW: REGIONAL HUBS SECTION (BENIN & UGANDA) */}
+      <section className="py-24 px-6 border-t border-gray-100">
+        <div className="max-w-[1300px] mx-auto">
+          <div className="mb-16">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#E31E24] mb-4">
+              REGIONAL OPERATIONS
+            </h2>
+            <h3 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-[#0D243F] leading-tight">
+              AFRICA <span className="text-[#2B99D6]">NETWORK</span>
+            </h3>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 lg:gap-24">
+            
+            {/* BENIN OFFICE */}
+            <div className="flex flex-col gap-8 group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-[2px] bg-[#E31E24]"></div>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0D243F]">BENIN OFFICE</h4>
+              </div>
+              <div className="flex items-start gap-6">
+                <div className="w-12 h-12 bg-[#F5F5F7] flex items-center justify-center text-[#2B99D6] shrink-0 group-hover:bg-[#2B99D6] group-hover:text-white transition-all duration-500">
+                   <Globe size={20} />
+                </div>
+                <div>
+                  <h5 className="font-black italic text-lg text-[#0D243F] uppercase tracking-tighter mb-4">Head Office (West Africa)</h5>
+                  <p className="text-sm text-gray-500 leading-relaxed uppercase font-medium mb-6 max-w-sm">
+                    Lot 343 Zongo, Rue derriere NSIA Bank Unafrica<br />
+                    Maison VLAVONOU Cotonoe Re du Benin
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-black text-[#0D243F] flex items-center gap-3">
+                       <Phone size={14} className="text-[#2B99D6]" /> +229 666 90707
+                    </p>
+                    <p className="text-xs font-black text-[#0D243F] flex items-center gap-3 ml-6">
+                       +229 971 74111
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* UGANDA OFFICE */}
+            <div className="flex flex-col gap-8 group">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-[2px] bg-[#E31E24]"></div>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0D243F]">UGANDA OFFICE</h4>
+              </div>
+              <div className="flex items-start gap-6">
+                <div className="w-12 h-12 bg-[#F5F5F7] flex items-center justify-center text-[#2B99D6] shrink-0 group-hover:bg-[#2B99D6] group-hover:text-white transition-all duration-500">
+                   <Globe size={20} />
+                </div>
+                <div>
+                  <h5 className="font-black italic text-lg text-[#0D243F] uppercase tracking-tighter mb-4">Head Office (East Africa)</h5>
+                  <p className="text-sm text-gray-500 leading-relaxed uppercase font-medium mb-6 max-w-sm">
+                    Kyadondo Block 273, Plot 23127<br />
+                    Kalina - Namasuba P.O. Box 111556<br />
+                    Kampala, Uganda
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs font-black text-[#0D243F] flex items-center gap-3">
+                       <Phone size={14} className="text-[#2B99D6]" /> +256 759 113 402
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Global Reach Section (Stats Bar) */}
       <section className="py-24 bg-[#F5F5F7] border-y border-gray-100">
         <div className="max-w-[1300px] mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="max-w-xl">
@@ -171,7 +238,7 @@ export default function ContactPage() {
           </div>
           <div className="flex gap-16 md:gap-24">
             <div className="text-center md:text-left">
-              <span className="block text-5xl font-black italic text-[#2B99D6] tracking-tighter mb-2">12+</span>
+              <span className="block text-5xl font-black italic text-[#2B99D6] tracking-tighter mb-2">40+</span>
               <span className="text-[10px] font-black uppercase text-gray-400 tracking-[0.2em] whitespace-nowrap">Countries Supplied</span>
             </div>
             <div className="text-center md:text-left">
@@ -182,21 +249,19 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* 3. Full-Width Grayscale Map */}
+      {/* 4. Full-Width Grayscale Map */}
       <section className="w-full h-[500px] relative bg-gray-200 border-t border-gray-200">
-        {/* We use a CSS filter to make the Google Map black/white/gray to fit the industrial brand */}
         <iframe 
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3604.434444976766!2d55.48512341501332!3d25.390234783806935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f58692a83e07d%3A0x6e9a6560ed81f9a2!2sAjman%20Industrial%202%20-%20Ajman%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115340.68652203613!2d55.42621431640626!3d25.401569600000007!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f560e90956557%3A0x9599599599599599!2sAjman%20Industrial%20Area%201%20-%20Ajman!5e0!3m2!1sen!2sae!4v1713532456789!5m2!1sen!2sae" 
           width="100%" 
           height="100%" 
           style={{ border: 0, filter: 'grayscale(100%) contrast(1.2) opacity(0.8)' }} 
           allowFullScreen={false} 
           loading="lazy" 
           referrerPolicy="no-referrer-when-downgrade"
-          title="NEWLUBE Ajman Headquarters Map"
+          title="TEXLUBE Ajman Headquarters Map"
         ></iframe>
         
-        {/* Red accent bar at the very bottom of the page */}
         <div className="absolute bottom-0 left-0 w-full h-2 bg-[#E31E24]"></div>
       </section>
 

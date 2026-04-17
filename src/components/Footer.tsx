@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { 
-  Mail, Phone, MapPin, ChevronRight, MessageCircle, 
-  Download, X, CheckCircle 
+  Mail, Phone, MapPin, MessageCircle, 
+  Download, X, ChevronUp, Globe
 } from 'lucide-react';
 
 // Icons with Prop support
@@ -26,10 +26,19 @@ const Linkedin = ({ size = 20 }: { size?: number }) => (
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const footerProducts = [
     { name: "Passenger Car", slug: "passenger-car" },
@@ -42,15 +51,12 @@ export default function Footer() {
     { name: "Greases", slug: "greases" },
   ];
 
-  const handleCatalogDownload = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setShowForm(false);
-      setIsModalOpen(false);
-    }, 1500);
-  };
+  // Placeholder URLs for your catalogs - update these as needed
+  const catalogOptions = [
+  { label: "English Version", lang: "EN", url: "/catalogs/texlube-technical-catalog-en.pdf" },
+  { label: "Version Française", lang: "FR", url: "/catalogs/texlube-technical-catalog-fr.pdf" },
+  { label: "النسخة العربية", lang: "AR", url: "/catalogs/texlube-technical-catalog-ar.pdf" },
+];
 
   return (
     <footer className="bg-[#0b131e] text-white pt-16 md:pt-24 pb-12 px-6 border-t border-white/5 relative">
@@ -71,14 +77,7 @@ export default function Footer() {
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Linkedin size={14} /></a>
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Instagram size={14} /></a>
               <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#E31E24] hover:text-white transition-all"><Facebook size={14} /></a>
-              
-              {/* UPDATED WHATSAPP LINK */}
-              <a 
-                href="https://wa.me/971554715123" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#25D366] hover:text-white transition-all"
-              >
+              <a href="https://wa.me/971554715123" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#25D366] hover:text-white transition-all">
                 <MessageCircle size={14} />
               </a>
             </div>
@@ -98,17 +97,48 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Company */}
+          {/* Column 3: Company & Multilingual Catalog */}
           <div className="text-center md:text-left">
             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2B99D6] mb-6 md:mb-8">COMPANY</h4>
             <ul className="flex flex-col gap-4">
               <li><Link href="/about" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">About Us</Link></li>
               <li><Link href="/contact" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Contact</Link></li>
               <li><Link href="/technology" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Why Texlube</Link></li>
-              <li className="pt-4">
-                <button onClick={() => setIsModalOpen(true)} className="text-[11px] font-black text-[#E31E24] hover:text-white flex items-center justify-center md:justify-start gap-3 uppercase tracking-widest mx-auto md:mx-0">
-                  <Download size={14} /> DOWNLOAD CATALOG
+              
+              {/* UPDATED: DROPDOWN CATALOGUE CTA */}
+              <li className="pt-4 relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className={`text-[11px] font-black flex items-center justify-center md:justify-start gap-3 uppercase tracking-widest mx-auto md:mx-0 transition-all duration-300 ${isDropdownOpen ? 'text-white' : 'text-[#E31E24] hover:text-white'}`}
+                >
+                  <Download size={14} /> DOWNLOAD CATALOGUE 
+                  <ChevronUp size={14} className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-0' : 'rotate-180'}`} />
                 </button>
+
+                {/* SLIDE-UP MENU */}
+                {isDropdownOpen && (
+                  <div className="absolute bottom-full left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 mb-4 w-56 bg-white shadow-2xl rounded-sm overflow-hidden z-[100] animate-in slide-in-from-bottom-2 duration-300">
+                    <div className="bg-[#0D243F] px-4 py-3 border-b border-white/5">
+                       <p className="text-[9px] font-black text-[#2B99D6] uppercase tracking-widest">Select Language</p>
+                    </div>
+                    <div className="flex flex-col">
+                      {catalogOptions.map((cat) => (
+                        <a 
+                          key={cat.lang}
+                          href={cat.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-5 py-4 flex items-center justify-between hover:bg-[#F9FAFB] transition-all group border-b border-gray-50 last:border-0"
+                        >
+                          <span className="text-[10px] font-black text-[#0D243F] uppercase tracking-widest group-hover:text-[#E31E24] transition-colors">
+                            {cat.label}
+                          </span>
+                          <span className="text-[9px] font-bold text-gray-300 group-hover:text-[#2B99D6]">{cat.lang}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </li>
             </ul>
           </div>
@@ -129,35 +159,21 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* BOTTOM BAR - Centered and Added Growize Digital Credit */}
+        {/* BOTTOM BAR */}
         <div className="pt-12 border-t border-white/5 flex flex-col items-center justify-center gap-6 text-center">
           <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
             © {currentYear} TEXLUBE LUBRICANTS. ALL RIGHTS RESERVED.
           </p>
-          
-          {/* GROWIZE DIGITAL CREDIT */}
           <Link 
             href="https://gro-wize.com" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-[#E31E24] transition-all duration-300"
+            className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-[#E31E24] transition-all duration-300 group"
           >
             DEVELOPED BY <span className="text-white group-hover:text-[#E31E24]">GROWIZE DIGITAL</span>
           </Link>
         </div>
       </div>
-
-      {/* MODAL PLACEHOLDER */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-[#0b131e]/95 backdrop-blur-md">
-           <div className="bg-white p-10 max-w-md w-full relative text-center">
-              <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-400"><X size={20}/></button>
-              <h5 className="text-[#0D243F] font-black uppercase mb-4">Request Catalog</h5>
-              <p className="text-gray-500 text-xs mb-6">Enter details to access the full technical document.</p>
-              <button onClick={handleCatalogDownload} className="w-full bg-[#E31E24] text-white py-4 font-black uppercase text-[10px]">Confirm Download</button>
-           </div>
-        </div>
-      )}
     </footer>
   );
 }
