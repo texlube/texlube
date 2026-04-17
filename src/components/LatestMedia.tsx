@@ -38,12 +38,31 @@ export default function LatestMedia() {
   ];
 
   const socialPosts = [
-    { platform: 'TikTok', icon: <TikTokIcon />, link: 'https://tiktok.com/@texlube' },
-    { platform: 'Facebook', icon: <Facebook />, link: 'https://facebook.com/texlube' },
-    { platform: 'Instagram', icon: <Instagram />, link: 'https://instagram.com/texlube' },
-    { platform: 'LinkedIn', icon: <Linkedin />, link: 'https://linkedin.com/company/texlube' },
-  ];
-
+  { 
+    platform: 'TikTok', 
+    icon: <TikTokIcon />, 
+    link: 'https://tiktok.com/@texlube',
+    image: '/media/tiktok-thumb.jpg' // Put these images in public/media/
+  },
+  { 
+    platform: 'Facebook', 
+    icon: <Facebook />, 
+    link: 'https://facebook.com/texlube',
+    image: '/media/fb-thumb.jpg'
+  },
+  { 
+    platform: 'Instagram', 
+    icon: <Instagram />, 
+    link: 'https://instagram.com/texlube',
+    image: '/media/ig-thumb.jpg'
+  },
+  { 
+    platform: 'LinkedIn', 
+    icon: <Linkedin />, 
+    link: 'https://linkedin.com/company/texlube',
+    image: '/media/li-thumb.jpg'
+  },
+];
   return (
     <section 
       className="relative py-16 md:py-32 px-6 bg-fixed bg-cover bg-center" 
@@ -69,26 +88,42 @@ export default function LatestMedia() {
 
           {/* Social Connect Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-4">
-            {socialPosts.map((post, index) => (
-              <a 
-                key={index} 
-                href={post.link} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-white border border-gray-100 p-6 flex flex-col items-start gap-4 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
-              >
-                <div className="w-10 h-10 bg-[#F8F9FA] flex items-center justify-center text-[#2B99D6] group-hover:bg-[#E31E24] group-hover:text-white transition-colors duration-300">
-                  {post.icon}
-                </div>
-                <div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-[#0D243F]">
-                    {post.platform}
-                  </span>
-                  <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-1">Connect Now</p>
-                </div>
-              </a>
-            ))}
-          </div>
+  {socialPosts.map((post, index) => (
+    <a 
+      key={index} 
+      href={post.link} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="relative bg-[#0D243F] aspect-square lg:aspect-video border border-gray-100 overflow-hidden group shadow-sm hover:shadow-2xl transition-all duration-500"
+    >
+      {/* Background Image */}
+      <img 
+        src={post.image} 
+        alt={post.platform}
+        className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 group-hover:opacity-20 transition-all duration-700"
+      />
+
+      {/* Content Overlay */}
+      <div className="relative z-10 p-4 h-full flex flex-col justify-between">
+        <div className="w-8 h-8 bg-white/10 backdrop-blur-md flex items-center justify-center text-white border border-white/20 group-hover:bg-[#E31E24] group-hover:border-[#E31E24] transition-all duration-300">
+          {post.icon}
+        </div>
+        
+        <div>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+            {post.platform}
+          </span>
+          <p className="text-[8px] font-bold text-[#2B99D6] uppercase tracking-widest mt-1 group-hover:text-white transition-colors">
+            View Latest Post →
+          </p>
+        </div>
+      </div>
+
+      {/* Hover Red Line */}
+      <div className="absolute bottom-0 left-0 w-0 h-1 bg-[#E31E24] group-hover:w-full transition-all duration-500" />
+    </a>
+  ))}
+</div>
         </div>
 
         {/* RIGHT COLUMN: Video Player & Technical Gallery */}
