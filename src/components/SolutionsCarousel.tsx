@@ -2,13 +2,14 @@
 
 import React, { useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay'; // New Import
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const solutions = [
   {
     title: "OUR SOLUTIONS FOR PASSENGER CARS",
-    image: "https://images.unsplash.com/photo-1633767859621-c44623dbf8bd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1633767859621-c44623dbf8bd?q=80&w=1170&auto=format&fit=crop",
     slug: "passenger-car"
   },
   {
@@ -18,51 +19,60 @@ const solutions = [
   },
   {
     title: "OUR SOLUTIONS FOR MOTOR CYCLES",
-    image: "https://images.unsplash.com/photo-1508357941501-0924cf312bbd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1508357941501-0924cf312bbd?q=80&w=1170&auto=format&fit=crop",
     slug: "motor-cycle"
   },
   {
     title: "OUR SOLUTIONS FOR ATF & GEAR",
-    image: "https://images.unsplash.com/photo-1681113376967-1fcd00cf78ee?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1681113376967-1fcd00cf78ee?q=80&w=1170&auto=format&fit=crop",
     slug: "atf-and-gear"
   },
   {
     title: "OUR SOLUTIONS FOR INDUSTRIAL",
-    image: "https://images.unsplash.com/photo-1717386255767-52643970d483?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1717386255767-52643970d483?q=80&w=1170&auto=format&fit=crop",
     slug: "industrial"
   },
   {
     title: "OUR SOLUTIONS FOR HYDRAULIC",
-    image: "https://images.unsplash.com/photo-1718004064215-1d28df8fc8c8?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1718004064215-1d28df8fc8c8?q=80&w=1074&auto=format&fit=crop",
     slug: "hydraulic"
   },
   {
     title: "OUR SOLUTIONS FOR SPECIALTY OIL",
-    image: "https://images.unsplash.com/photo-1760804462141-442810513d4e?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1760804462141-442810513d4e?q=80&w=1169&auto=format&fit=crop",
     slug: "speciality-oil"
   },
   {
     title: "OUR SOLUTIONS FOR GREASES",
-    image: "https://images.unsplash.com/photo-1742729251811-3e4026420812?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1742729251811-3e4026420812?q=80&w=1170&auto=format&fit=crop",
     slug: "greases"
   }
 ];
 
 export default function SolutionsCarousel() {
-  // align: 'start' ensures the first card sticks to the left padding of the centered container
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: 'start',
-    slidesToScroll: 1,
-    containScroll: 'trimSnaps'
-  });
+  // 1. Setup Embla with Autoplay plugin
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { 
+      loop: true, 
+      align: 'start',
+      slidesToScroll: 1,
+      containScroll: 'trimSnaps',
+      duration: 60 // Makes the transition itself slower/smoother
+    }, 
+    [
+      Autoplay({ 
+        delay: 3000, // 3 seconds pause between movements
+        stopOnInteraction: false, // Keeps moving even after user clicks
+        stopOnMouseEnter: true    // Pauses when user hovers to look at a card
+      })
+    ]
+  );
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
   return (
     <section className="py-24 bg-[#F5F5F7]">
-      {/* Container is centered with mx-auto */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
         
         {/* Header Section */}
@@ -92,20 +102,18 @@ export default function SolutionsCarousel() {
         </div>
 
         {/* Carousel Viewport */}
-        <div className="overflow-hidden" ref={emblaRef}>
+        <div className="overflow-hidden cursor-grab active:cursor-grabbing" ref={emblaRef}>
           <div className="flex -ml-4 lg:-ml-6">
             {solutions.map((item, index) => (
               <div 
                 key={index} 
-                // flex-[0_0_25%] forces exactly 4 cards on desktop
                 className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 lg:pl-6"
               >
                 <Link 
                   href={`/products?category=${item.slug}`}
-                  className="bg-white group cursor-pointer border border-gray-50 shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col no-underline rounded-sm overflow-hidden"
+                  className="bg-white group cursor-pointer border border-gray-50 shadow-sm hover:shadow-2xl transition-all duration-500 h-[480px] flex flex-col no-underline rounded-sm overflow-hidden"
                 >
-                  {/* Image Container */}
-                  <div className="relative aspect-[5/4] overflow-hidden bg-gray-100">
+                  <div className="relative h-[280px] overflow-hidden bg-gray-100">
                     <img 
                       src={item.image} 
                       alt={item.title} 
@@ -114,13 +122,12 @@ export default function SolutionsCarousel() {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0D243F]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
                   
-                  {/* Text Content */}
-                  <div className="p-8 text-center flex flex-col items-center flex-grow">
-                    <h4 className="font-black italic text-[16px] text-[#0D243F] mb-10 leading-[1.2] uppercase tracking-tighter min-h-[3rem] group-hover:text-[#E31E24] transition-colors">
+                  <div className="p-8 text-center flex flex-col items-center justify-between flex-grow">
+                    <h4 className="font-black italic text-[16px] text-[#0D243F] leading-[1.2] uppercase tracking-tighter group-hover:text-[#E31E24] transition-colors">
                       {item.title}
                     </h4>
                     
-                    <div className="mt-auto flex items-center gap-3 text-[#2B99D6] text-[10px] font-black uppercase tracking-[0.2em] group-hover:text-[#0D243F] transition-colors">
+                    <div className="flex items-center gap-3 text-[#2B99D6] text-[10px] font-black uppercase tracking-[0.2em] group-hover:text-[#0D243F] transition-colors">
                       LEARN MORE
                       <span className="w-8 h-8 rounded-full bg-[#2B99D6] text-white flex items-center justify-center group-hover:bg-[#0D243F] transition-all shadow-md group-hover:scale-110">
                         <ArrowRight size={14} />

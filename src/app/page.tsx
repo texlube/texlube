@@ -68,7 +68,7 @@ export default async function HomePage() {
           </div>
 
           {/* RIGHT COLUMN - Hero Image (Priority Loaded) */}
-          <div className="relative aspect-square md:aspect-[4/3] overflow-hidden shadow-2xl rounded-sm order-1 md:order-2">
+          <div className="relative aspect-square md:aspect-[4/3] rounded-sm order-1 md:order-2">
               <div className="absolute inset-0 bg-gradient-to-r from-[#002e5b]/40 via-transparent to-transparent z-10 pointer-events-none"></div>
               
               <Image 
