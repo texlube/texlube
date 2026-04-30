@@ -7,6 +7,8 @@ import {
   Mail, Phone, MapPin, MessageCircle, 
   Download, X, ChevronUp, Globe
 } from 'lucide-react';
+// 1. Import the new Modal component
+import CatalogDownloadModal from './CatalogDownloadModal';
 
 // Icons with Prop support
 const Facebook = ({ size = 20 }: { size?: number }) => (
@@ -27,9 +29,13 @@ const Linkedin = ({ size = 20 }: { size?: number }) => (
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  // 2. Add state to manage the Lead Form Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCatalog, setActiveCatalog] = useState({ label: '', url: '' });
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -51,12 +57,18 @@ export default function Footer() {
     { name: "Greases", slug: "greases" },
   ];
 
-  // Placeholder URLs for your catalogs - update these as needed
   const catalogOptions = [
-  { label: "English Version", lang: "EN", url: "/catalogs/texlube-technical-catalog-en.pdf" },
-  { label: "Version Française", lang: "FR", url: "/catalogs/texlube-technical-catalog-fr.pdf" },
-  { label: "النسخة العربية", lang: "AR", url: "/catalogs/texlube-technical-catalog-ar.pdf" },
-];
+    { label: "English Version", lang: "EN", url: "/catalogs/texlube-technical-catalog-en.pdf" },
+    { label: "Version Française", lang: "FR", url: "/catalogs/texlube-technical-catalog-fr.pdf" },
+    { label: "النسخة العربية", lang: "AR", url: "/catalogs/texlube-technical-catalog-ar.pdf" },
+  ];
+
+  // 3. Function to trigger the modal
+  const handleCatalogClick = (label: string, url: string) => {
+    setActiveCatalog({ label, url });
+    setIsModalOpen(true);
+    setIsDropdownOpen(false); // Close the slide-up menu
+  };
 
   return (
     <footer className="bg-[#0b131e] text-white pt-16 md:pt-24 pb-12 px-6 border-t border-white/5 relative">
@@ -105,7 +117,6 @@ export default function Footer() {
               <li><Link href="/contact" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Contact</Link></li>
               <li><Link href="/technology" className="text-xs font-bold text-gray-400 hover:text-white transition-colors">Why Texlube</Link></li>
               
-              {/* UPDATED: DROPDOWN CATALOGUE CTA */}
               <li className="pt-4 relative" ref={dropdownRef}>
                 <button 
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -115,7 +126,6 @@ export default function Footer() {
                   <ChevronUp size={14} className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-0' : 'rotate-180'}`} />
                 </button>
 
-                {/* SLIDE-UP MENU */}
                 {isDropdownOpen && (
                   <div className="absolute bottom-full left-1/2 md:left-0 -translate-x-1/2 md:translate-x-0 mb-4 w-56 bg-white shadow-2xl rounded-sm overflow-hidden z-[100] animate-in slide-in-from-bottom-2 duration-300">
                     <div className="bg-[#0D243F] px-4 py-3 border-b border-white/5">
@@ -123,18 +133,17 @@ export default function Footer() {
                     </div>
                     <div className="flex flex-col">
                       {catalogOptions.map((cat) => (
-                        <a 
+                        /* 4. Changed <a> to <button> to trigger the Lead Form */
+                        <button 
                           key={cat.lang}
-                          href={cat.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-5 py-4 flex items-center justify-between hover:bg-[#F9FAFB] transition-all group border-b border-gray-50 last:border-0"
+                          onClick={() => handleCatalogClick(cat.label, cat.url)}
+                          className="w-full px-5 py-4 flex items-center justify-between hover:bg-[#F9FAFB] transition-all group border-b border-gray-50 last:border-0 text-left"
                         >
                           <span className="text-[10px] font-black text-[#0D243F] uppercase tracking-widest group-hover:text-[#E31E24] transition-colors">
                             {cat.label}
                           </span>
                           <span className="text-[9px] font-bold text-gray-300 group-hover:text-[#2B99D6]">{cat.lang}</span>
-                        </a>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -174,6 +183,14 @@ export default function Footer() {
           </Link>
         </div>
       </div>
+
+      {/* 5. Render the Catalog Modal */}
+      <CatalogDownloadModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        fileUrl={activeCatalog.url}
+        langLabel={activeCatalog.label}
+      />
     </footer>
   );
 }

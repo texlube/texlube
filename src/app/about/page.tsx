@@ -33,6 +33,16 @@ const teamMembers = [
     name: "Rhoda Wangui Muregi",
     role: "BDM - East Africa",
     image: "/team-4.webp"
+  },
+  {
+    name: "LANSINA TRAORE",
+    role: "Channel Partner West and Central Africa",
+    image: "/team-5.webp"
+  },
+  {
+    name: "Gnintedemo Tsachoung Yannick",
+    role: "Sales Manager (West and Central Africa)",
+    image: "/team-6.webp" 
   }
 ];
 
@@ -44,7 +54,7 @@ export default function AboutPage() {
       <section className="bg-[#002e5b] py-24 px-6 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src="http://googleusercontent.com/image_collection/image_retrieval/6007697315257420586_0" 
+            src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=2000" 
             alt="TEXLUBE Engineering Facility" 
             className="w-full h-full object-cover opacity-20 mix-blend-overlay"
           />
@@ -171,9 +181,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. Executive Team - BLUE LINKEDIN ICONS */}
+      {/* 5. Executive Team - RECONFIGURED FOR 6 MEMBERS (3 COLUMNS) */}
       <section className="py-32 px-6 bg-white">
-        <div className="max-w-[1300px] mx-auto">
+        <div className="max-w-[1200px] mx-auto px-4">
           <div className="text-center mb-20">
             <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#E31E24] mb-4">
               THE MINDS BEHIND THE FLUID
@@ -183,10 +193,11 @@ export default function AboutPage() {
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Adjusted grid to 3 columns on desktop for perfect balance */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
             {teamMembers.map((member, index) => (
               <div key={index} className="group cursor-pointer">
-                <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6 rounded-sm shadow-lg">
+                <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6 rounded-sm shadow-lg border border-gray-100">
                   <Image 
                     src={member.image} 
                     alt={member.name} 
@@ -194,7 +205,6 @@ export default function AboutPage() {
                     className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0D243F] via-transparent to-transparent opacity-0 group-hover:opacity-90 transition-opacity duration-500 flex items-end p-6">
-                    {/* Updated to White background with Blue icon for better visibility */}
                     <a 
                       href="#" 
                       className="w-10 h-10 rounded-full bg-white text-[#0077b5] flex items-center justify-center hover:bg-[#0077b5] hover:text-white transition-all shadow-xl"
@@ -203,10 +213,10 @@ export default function AboutPage() {
                     </a>
                   </div>
                 </div>
-                <h4 className="text-xl font-black italic uppercase text-[#0D243F] mb-1 group-hover:text-[#E31E24] transition-colors leading-none">
+                <h4 className="text-xl font-black italic uppercase text-[#0D243F] mb-1 group-hover:text-[#E31E24] transition-colors leading-tight">
                   {member.name}
                 </h4>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 leading-relaxed">
                   {member.role}
                 </p>
               </div>

@@ -38,18 +38,21 @@ export const operations = [
 
 export const operationsData = {
   featuredVideo: {
-    videoSrc: "/milestone-video.mp4",
-    src: "/milestone-video.mp4" 
+    videoSrc: "/milestone.mp4", // Located in public/ root
+    src: "/milestone.mp4" 
   },
   homepageImages: [
-    { src: "/milestone-top.webp" },         // Top Image
-    { src: "/milestone-bottom-left.webp" },  // Bottom Left
-    { src: "/milestone-bottom-right.webp" } // Bottom Right
+    { src: "/milestone-top.webp" },         // Index 1 in album
+    { src: "/milestone-bottom-left.webp" },  // Index 2 in album
+    { src: "/gallery-6.webp" }               // Index 3 in album (Visible in grid)
   ],
   extraImages: [
-    { src: "/gallery-1.webp" }, // Hidden from grid, shown in gallery
+    { src: "/milestone-bottom-right.webp" }, // Index 4 in album
+    { src: "/gallery-1.webp" },
     { src: "/gallery-2.webp" },
     { src: "/gallery-3.webp" },
     { src: "/gallery-4.webp" },
+    { src: "/gallery-5.webp" },
+    { src: "/gallery-7.webp" }               // 10th Image
   ]
 };
