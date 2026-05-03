@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-// Make sure to add your RESEND_API_KEY to .env.local
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Adding a fallback string prevents the SDK from crashing during the build process
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
 
 export async function POST(request: Request) {
+  // Check if the actual key is missing during runtime
+  if (!process.env.RESEND_API_KEY) {
+    console.error("RESEND_API_KEY is not defined in environment variables");
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+  }
+
   try {
     const body = await request.json();
     const { fullName, country, mobile, company, email, catalogLang } = body;

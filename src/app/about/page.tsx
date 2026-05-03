@@ -13,16 +13,12 @@ const Linkedin = ({ size = 20 }: { size?: number }) => (
   </svg>
 );
 
+// UPDATED: Team array reduced to 5 members
 const teamMembers = [
   {
     name: "Tausif Zaman",
     role: "CEO / Founder",
     image: "/team-1.webp"
-  },
-  {
-    name: "Sayed Mazhar Alam",
-    role: "Managing Director",
-    image: "/team-2.webp"
   },
   {
     name: "Mohamed Sanni",
@@ -181,7 +177,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. Executive Team - RECONFIGURED FOR 6 MEMBERS (3 COLUMNS) */}
+      {/* 5. Executive Team - RECONFIGURED FOR 5 MEMBERS (CENTERED GRID) */}
       <section className="py-32 px-6 bg-white">
         <div className="max-w-[1200px] mx-auto px-4">
           <div className="text-center mb-20">
@@ -193,10 +189,10 @@ export default function AboutPage() {
             </h3>
           </div>
 
-          {/* Adjusted grid to 3 columns on desktop for perfect balance */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
+          {/* Using flex-wrap and justify-center to handle 5 cards elegantly (3 on top, 2 centered below) */}
+          <div className="flex flex-wrap justify-center gap-x-12 gap-y-16 lg:gap-x-16">
             {teamMembers.map((member, index) => (
-              <div key={index} className="group cursor-pointer">
+              <div key={index} className="group cursor-pointer w-full sm:w-[350px] lg:w-[320px]">
                 <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6 rounded-sm shadow-lg border border-gray-100">
                   <Image 
                     src={member.image} 
