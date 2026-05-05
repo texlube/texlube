@@ -24,14 +24,16 @@ const categories = [
   { id: 'greases', name: 'GREASES' },
 ];
 
-// Shared sub-categories for both Petrol and Diesel
 const mainSubs = ['semi-synthetic', 'fully-synthetic', 'mineral']; 
 const specialitySubs = ['coolant', 'brake-fluid'];
 
 function ProductsList() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  
+  // Get both the category and the parent context from URL
   const categoryParam = searchParams.get('category') || 'all-products';
+  const parentParam = searchParams.get('parent');
   
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,6 +63,7 @@ function ProductsList() {
     fetchSanityProducts();
   }, []);
 
+  // UPDATED FILTER LOGIC: Checks for Sub-Category + Parent Context
   const filteredProducts = products.filter((p) => {
     const currentFilter = categoryParam.toLowerCase().trim();
     if (currentFilter === 'all-products') return true;
@@ -68,6 +71,12 @@ function ProductsList() {
     const pCat = p.categorySlug?.toLowerCase().trim();
     const pParent = p.parentCategorySlug?.toLowerCase().trim();
 
+    // Logic: If it's a shared sub-category, we MUST match the parent context
+    if (mainSubs.includes(currentFilter) && parentParam) {
+        return pCat === currentFilter && pParent === parentParam;
+    }
+
+    // Default: Show items matching the category slug or the parent slug
     return pCat === currentFilter || pParent === currentFilter;
   });
 
@@ -84,11 +93,17 @@ function ProductsList() {
       <div className="border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => {
-            const isPetrolActive = cat.id === 'petrol-gasoline' && (categoryParam === 'petrol-gasoline' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'petrol-gasoline' && p.categorySlug === categoryParam)));
-            const isDieselActive = cat.id === 'diesel-vehicle' && (categoryParam === 'diesel-vehicle' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'diesel-vehicle' && p.categorySlug === categoryParam)));
+            // Check if Petrol is active (via direct click or sub-category with petrol parent)
+            const isPetrolActive = (cat.id === 'petrol-gasoline') && 
+                                   (categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline');
+            
+            // Check if Diesel is active (via direct click or sub-category with diesel parent)
+            const isDieselActive = (cat.id === 'diesel-vehicle') && 
+                                   (categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle');
             
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
-            const isDirectActive = categoryParam === cat.id;
+            const isDirectActive = categoryParam === cat.id && !parentParam;
+            
             const isActive = isDirectActive || isPetrolActive || isDieselActive || isSpecialityActive;
 
             return (
@@ -109,19 +124,24 @@ function ProductsList() {
         </div>
       </div>
 
-      {/* 2. PETROL/GASOLINE TAB SWITCHER */}
-      {(categoryParam === 'petrol-gasoline' || (mainSubs.includes(categoryParam) && !products.some(p => p.parentCategorySlug === 'diesel-vehicle' && p.categorySlug === categoryParam))) && (
+      {/* 2. PETROL/GASOLINE TAB SWITCHER (Now with Parent Context) */}
+      {(categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline') && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
             {[
-              { id: 'petrol-gasoline', name: 'SHOW ALL' },
-              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC' },
-              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC' },
-              { id: 'mineral', name: 'MINERAL' }
+              { id: 'petrol-gasoline', name: 'SHOW ALL', parent: null },
+              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC', parent: 'petrol-gasoline' },
+              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC', parent: 'petrol-gasoline' },
+              { id: 'mineral', name: 'MINERAL', parent: 'petrol-gasoline' }
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => router.push(`/products?category=${tab.id}`, { scroll: false })}
+                onClick={() => {
+                    const url = tab.parent 
+                        ? `/products?category=${tab.id}&parent=${tab.parent}`
+                        : `/products?category=${tab.id}`;
+                    router.push(url, { scroll: false });
+                }}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id 
                     ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' 
@@ -138,19 +158,24 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 3. DIESEL VEHICLE TAB SWITCHER */}
-      {(categoryParam === 'diesel-vehicle' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'diesel-vehicle'))) && (
+      {/* 3. DIESEL VEHICLE TAB SWITCHER (Now with Parent Context) */}
+      {(categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle') && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
             {[
-              { id: 'diesel-vehicle', name: 'SHOW ALL' },
-              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC' },
-              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC' },
-              { id: 'mineral', name: 'MINERAL' }
+              { id: 'diesel-vehicle', name: 'SHOW ALL', parent: null },
+              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC', parent: 'diesel-vehicle' },
+              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC', parent: 'diesel-vehicle' },
+              { id: 'mineral', name: 'MINERAL', parent: 'diesel-vehicle' }
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => router.push(`/products?category=${tab.id}`, { scroll: false })}
+                onClick={() => {
+                    const url = tab.parent 
+                        ? `/products?category=${tab.id}&parent=${tab.parent}`
+                        : `/products?category=${tab.id}`;
+                    router.push(url, { scroll: false });
+                }}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id 
                     ? 'bg-[#E31E24] text-white shadow-xl scale-[1.02]' 
@@ -198,7 +223,6 @@ function ProductsList() {
                 <h3 className="text-[14px] md:text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
                   {product.name}
                 </h3>
-                {/* UPDATED LABEL HERE: UAE GRADE -> API GRADE */}
                 <div className="bg-[#F8F9FA] px-3 py-2 flex justify-between items-center mb-6 border-l-2 border-[#E31E24]">
                   <span className="text-[8px] font-bold text-gray-500 uppercase">{product.viscosity || 'TDS AVAILABLE'}</span>
                   <span className="text-[8px] font-black text-[#E31E24]">API GRADE</span>
