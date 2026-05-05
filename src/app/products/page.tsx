@@ -14,8 +14,8 @@ import Footer from '@/components/Footer';
 
 const categories = [
   { id: 'all-products', name: 'ALL PRODUCTS' },
-  { id: 'passenger-car', name: 'PASSENGER CAR' },
-  { id: 'truck-and-busses', name: 'TRUCKS & BUSSES' }, 
+  { id: 'petrol-gasoline', name: 'PETROL/GASOLINE VEHICLE' }, 
+  { id: 'diesel-vehicle', name: 'DIESEL VEHICLE' },           
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
   { id: 'atf-and-gear', name: 'ATF & GEAR' },
   { id: 'industrial', name: 'INDUSTRIAL' },
@@ -24,8 +24,8 @@ const categories = [
   { id: 'greases', name: 'GREASES' },
 ];
 
-// Helper to check sub-category groups
-const passengerSubs = ['semi-synthetic', 'fully-synthetic', 'mineral'];
+// Shared sub-categories for both Petrol and Diesel
+const mainSubs = ['semi-synthetic', 'fully-synthetic', 'mineral']; 
 const specialitySubs = ['coolant', 'brake-fluid'];
 
 function ProductsList() {
@@ -74,21 +74,22 @@ function ProductsList() {
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-40">
       <Loader2 className="animate-spin text-[#E31E24] mb-4" size={40} />
-      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Updating Catalogue...</span>
+      <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Syncing Catalogue...</span>
     </div>
   );
 
   return (
     <>
-      {/* MAIN CATEGORY NAV */}
-      <div className="border-b border-gray-100 mb-8 overflow-x-auto no-scrollbar">
+      {/* 1. MAIN CATEGORY NAVIGATION */}
+      <div className="border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => {
-            // Logic to keep parent active if sub-category is selected
-            const isPassengerActive = cat.id === 'passenger-car' && (categoryParam === 'passenger-car' || passengerSubs.includes(categoryParam));
+            const isPetrolActive = cat.id === 'petrol-gasoline' && (categoryParam === 'petrol-gasoline' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'petrol-gasoline' && p.categorySlug === categoryParam)));
+            const isDieselActive = cat.id === 'diesel-vehicle' && (categoryParam === 'diesel-vehicle' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'diesel-vehicle' && p.categorySlug === categoryParam)));
+            
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             const isDirectActive = categoryParam === cat.id;
-            const isActive = isDirectActive || isPassengerActive || isSpecialityActive;
+            const isActive = isDirectActive || isPetrolActive || isDieselActive || isSpecialityActive;
 
             return (
               <button 
@@ -100,7 +101,7 @@ function ProductsList() {
               >
                 {cat.name}
                 {isActive && (
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E31E24]" />
+                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#E31E24] animate-in fade-in zoom-in duration-300" />
                 )}
               </button>
             );
@@ -108,26 +109,74 @@ function ProductsList() {
         </div>
       </div>
 
-      {/* PASSENGER CAR SUB-CATEGORIES */}
-      {(categoryParam === 'passenger-car' || passengerSubs.includes(categoryParam)) && (
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
-          <button onClick={() => router.push('/products?category=passenger-car')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'passenger-car' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL PASSENGER</button>
-          <button onClick={() => router.push('/products?category=fully-synthetic')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'fully-synthetic' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>FULLY SYNTHETIC</button>
-          <button onClick={() => router.push('/products?category=semi-synthetic')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'semi-synthetic' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>SEMI SYNTHETIC</button>
-          <button onClick={() => router.push('/products?category=mineral')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'mineral' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>MINERAL</button>
+      {/* 2. PETROL/GASOLINE TAB SWITCHER */}
+      {(categoryParam === 'petrol-gasoline' || (mainSubs.includes(categoryParam) && !products.some(p => p.parentCategorySlug === 'diesel-vehicle' && p.categorySlug === categoryParam))) && (
+        <div className="flex flex-col items-center mb-16 px-4">
+          <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
+            {[
+              { id: 'petrol-gasoline', name: 'SHOW ALL' },
+              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC' },
+              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC' },
+              { id: 'mineral', name: 'MINERAL' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => router.push(`/products?category=${tab.id}`, { scroll: false })}
+                className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
+                  categoryParam === tab.id 
+                    ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' 
+                    : 'text-gray-400 hover:text-[#0D243F]'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">PETROL VEHICLE RANGE</p>
+          </div>
         </div>
       )}
 
-      {/* SPECIALITY OIL SUB-CATEGORIES */}
+      {/* 3. DIESEL VEHICLE TAB SWITCHER */}
+      {(categoryParam === 'diesel-vehicle' || (mainSubs.includes(categoryParam) && products.some(p => p.parentCategorySlug === 'diesel-vehicle'))) && (
+        <div className="flex flex-col items-center mb-16 px-4">
+          <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
+            {[
+              { id: 'diesel-vehicle', name: 'SHOW ALL' },
+              { id: 'fully-synthetic', name: 'FULLY SYNTHETIC' },
+              { id: 'semi-synthetic', name: 'SEMI SYNTHETIC' },
+              { id: 'mineral', name: 'MINERAL' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => router.push(`/products?category=${tab.id}`, { scroll: false })}
+                className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
+                  categoryParam === tab.id 
+                    ? 'bg-[#E31E24] text-white shadow-xl scale-[1.02]' 
+                    : 'text-gray-400 hover:text-[#E31E24]'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">HEAVY DUTY DIESEL RANGE</p>
+          </div>
+        </div>
+      )}
+
+      {/* 4. SPECIALITY OIL SUB-CATEGORIES */}
       {(categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam)) && (
-        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-12 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-16 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
           <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
           <button onClick={() => router.push('/products?category=coolant')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'coolant' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>COOLANTS</button>
           <button onClick={() => router.push('/products?category=brake-fluid')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'brake-fluid' ? 'bg-[#E31E24] text-white border-[#E31E24]' : 'bg-white text-gray-400 border-gray-200'}`}>BRAKE FLUIDS</button>
         </div>
       )}
 
-      {/* PRODUCT GRID */}
+      {/* 5. THE PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
@@ -149,9 +198,10 @@ function ProductsList() {
                 <h3 className="text-[14px] md:text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
                   {product.name}
                 </h3>
+                {/* UPDATED LABEL HERE: UAE GRADE -> API GRADE */}
                 <div className="bg-[#F8F9FA] px-3 py-2 flex justify-between items-center mb-6 border-l-2 border-[#E31E24]">
                   <span className="text-[8px] font-bold text-gray-500 uppercase">{product.viscosity || 'TDS AVAILABLE'}</span>
-                  <span className="text-[8px] font-black text-[#E31E24]">UAE GRADE</span>
+                  <span className="text-[8px] font-black text-[#E31E24]">API GRADE</span>
                 </div>
                 <div className="mt-auto flex justify-between items-center">
                   <Link href={`/product/${product.id}`} className="text-[9px] font-black text-[#2B99D6] hover:text-[#E31E24] uppercase tracking-widest transition-colors">

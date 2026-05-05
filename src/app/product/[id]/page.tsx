@@ -150,9 +150,10 @@ export default function ProductDetailPage() {
               </div>
             )}
             
+            {/* UPDATED: Changed label to API Service Compliant */}
             <p className="mt-8 text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-              <CheckCircle2 size={12} className="text-[#2B99D6]" /> 
-              ISO CERTIFIED FORMULATION
+              <ShieldCheck size={12} className="text-[#2B99D6]" /> 
+              API SERVICE COMPLIANT
             </p>
           </div>
         </div>
