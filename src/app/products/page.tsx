@@ -24,14 +24,15 @@ const categories = [
   { id: 'greases', name: 'GREASES' },
 ];
 
+// Helper constants for sub-category filtering
 const mainSubs = ['semi-synthetic', 'fully-synthetic', 'mineral']; 
+const motoSubs = ['synthetic', 'multigrade']; // NEW: Motorcycle specific subs
 const specialitySubs = ['coolant', 'brake-fluid'];
 
 function ProductsList() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  // Get both the category and the parent context from URL
   const categoryParam = searchParams.get('category') || 'all-products';
   const parentParam = searchParams.get('parent');
   
@@ -63,7 +64,6 @@ function ProductsList() {
     fetchSanityProducts();
   }, []);
 
-  // UPDATED FILTER LOGIC: Checks for Sub-Category + Parent Context
   const filteredProducts = products.filter((p) => {
     const currentFilter = categoryParam.toLowerCase().trim();
     if (currentFilter === 'all-products') return true;
@@ -71,12 +71,12 @@ function ProductsList() {
     const pCat = p.categorySlug?.toLowerCase().trim();
     const pParent = p.parentCategorySlug?.toLowerCase().trim();
 
-    // Logic: If it's a shared sub-category, we MUST match the parent context
-    if (mainSubs.includes(currentFilter) && parentParam) {
+    // Context-aware filtering for shared or specific sub-categories
+    const isSharedSub = mainSubs.includes(currentFilter) || motoSubs.includes(currentFilter);
+    if (isSharedSub && parentParam) {
         return pCat === currentFilter && pParent === parentParam;
     }
 
-    // Default: Show items matching the category slug or the parent slug
     return pCat === currentFilter || pParent === currentFilter;
   });
 
@@ -93,18 +93,19 @@ function ProductsList() {
       <div className="border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => {
-            // Check if Petrol is active (via direct click or sub-category with petrol parent)
             const isPetrolActive = (cat.id === 'petrol-gasoline') && 
                                    (categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline');
             
-            // Check if Diesel is active (via direct click or sub-category with diesel parent)
             const isDieselActive = (cat.id === 'diesel-vehicle') && 
                                    (categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle');
+
+            const isMotoActive = (cat.id === 'motor-cycle') && 
+                                 (categoryParam === 'motor-cycle' || parentParam === 'motor-cycle');
             
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             const isDirectActive = categoryParam === cat.id && !parentParam;
             
-            const isActive = isDirectActive || isPetrolActive || isDieselActive || isSpecialityActive;
+            const isActive = isDirectActive || isPetrolActive || isDieselActive || isMotoActive || isSpecialityActive;
 
             return (
               <button 
@@ -124,7 +125,7 @@ function ProductsList() {
         </div>
       </div>
 
-      {/* 2. PETROL/GASOLINE TAB SWITCHER (Now with Parent Context) */}
+      {/* 2. PETROL/GASOLINE TAB SWITCHER */}
       {(categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline') && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
@@ -158,7 +159,7 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 3. DIESEL VEHICLE TAB SWITCHER (Now with Parent Context) */}
+      {/* 3. DIESEL VEHICLE TAB SWITCHER */}
       {(categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle') && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
@@ -192,7 +193,40 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 4. SPECIALITY OIL SUB-CATEGORIES */}
+      {/* 4. MOTORCYCLE TAB SWITCHER (NEW 2-TAB LAYOUT) */}
+      {(categoryParam === 'motor-cycle' || parentParam === 'motor-cycle') && (
+        <div className="flex flex-col items-center mb-16 px-4">
+          <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
+            {[
+              { id: 'motor-cycle', name: 'SHOW ALL', parent: null },
+              { id: 'synthetic', name: 'SYNTHETIC', parent: 'motor-cycle' },
+              { id: 'multigrade', name: 'MULTIGRADE', parent: 'motor-cycle' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                    const url = tab.parent 
+                        ? `/products?category=${tab.id}&parent=${tab.parent}`
+                        : `/products?category=${tab.id}`;
+                    router.push(url, { scroll: false });
+                }}
+                className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
+                  categoryParam === tab.id 
+                    ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' 
+                    : 'text-gray-400 hover:text-[#0D243F]'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">2T & 4T ENGINE OILS</p>
+          </div>
+        </div>
+      )}
+
+      {/* 5. SPECIALITY OIL SUB-CATEGORIES */}
       {(categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam)) && (
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-16 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
           <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
@@ -201,7 +235,7 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 5. THE PRODUCT GRID */}
+      {/* 6. THE PRODUCT GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
