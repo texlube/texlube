@@ -8,6 +8,7 @@ import { client } from '@/sanity/lib/client';
 import { 
   Loader2, 
   ChevronRight,
+  Package
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -26,8 +27,37 @@ const categories = [
 
 // Helper constants for sub-category filtering
 const mainSubs = ['semi-synthetic', 'fully-synthetic', 'mineral']; 
-const motoSubs = ['synthetic', 'multigrade']; // NEW: Motorcycle specific subs
+const motoSubs = ['synthetic', 'multigrade']; 
 const specialitySubs = ['coolant', 'brake-fluid'];
+
+// INDUSTRIAL NESTED TABS CONSTANTS
+const industrialTabs = [
+  { id: 'circulating-oil', name: 'CIRCULATING OIL' },
+  { id: 'spindle-oil', name: 'SPINDLE OIL' },
+  { id: 'quenching-oil', name: 'QUENCHING OIL' },
+  { id: 'industrial-gear-oil', name: 'INDUSTRIAL GEAR OIL' },
+  { id: 'anti-wear-gear-oil', name: 'ANTI WEAR GEAR OIL' },
+  { id: 'sugar-mill-bearing-oil', name: 'SUGAR MILL BEARING OIL' },
+  { id: 'compressor-oil', name: 'COMPRESSOR OIL' },
+  { id: 'cutting-oil', name: 'CUTTING OIL' }
+];
+
+const circulatingSubs = [
+  { id: 'hlp-circulating', name: 'HLP CIRCULATING', parent: 'circulating-oil' },
+  { id: 'antiwear-circulating', name: 'ANTIWEAR CIRCULATING', parent: 'circulating-oil' }
+];
+
+const cuttingSubs = [
+  { id: 'soluble-cutting', name: 'SOLUBLE CUTTING', parent: 'cutting-oil' },
+  { id: 'active-cutting', name: 'ACTIVE CUTTING', parent: 'cutting-oil' },
+  { id: 'active-cutting-st', name: 'ACTIVE CUTTING ST', parent: 'cutting-oil' }
+];
+
+const allIndustrialSubs = [
+  ...industrialTabs.map(t => t.id),
+  ...circulatingSubs.map(t => t.id),
+  ...cuttingSubs.map(t => t.id)
+];
 
 function ProductsList() {
   const searchParams = useSearchParams();
@@ -72,9 +102,9 @@ function ProductsList() {
     const pParent = p.parentCategorySlug?.toLowerCase().trim();
 
     // Context-aware filtering for shared or specific sub-categories
-    const isSharedSub = mainSubs.includes(currentFilter) || motoSubs.includes(currentFilter);
+    const isSharedSub = mainSubs.includes(currentFilter) || motoSubs.includes(currentFilter) || allIndustrialSubs.includes(currentFilter);
     if (isSharedSub && parentParam) {
-        return pCat === currentFilter && pParent === parentParam;
+        return pCat === currentFilter && (pParent === parentParam || p.parentCategorySlug === 'industrial');
     }
 
     return pCat === currentFilter || pParent === currentFilter;
@@ -87,25 +117,23 @@ function ProductsList() {
     </div>
   );
 
+  // Check if we are inside the Industrial section context
+  const isIndustrialActiveSection = categoryParam === 'industrial' || parentParam === 'industrial' || allIndustrialSubs.includes(categoryParam);
+
   return (
     <>
       {/* 1. MAIN CATEGORY NAVIGATION */}
       <div className="border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar">
         <div className="flex justify-start lg:justify-center items-center gap-8 md:gap-10 whitespace-nowrap px-6 min-w-max">
           {categories.map((cat) => {
-            const isPetrolActive = (cat.id === 'petrol-gasoline') && 
-                                   (categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline');
-            
-            const isDieselActive = (cat.id === 'diesel-vehicle') && 
-                                   (categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle');
-
-            const isMotoActive = (cat.id === 'motor-cycle') && 
-                                 (categoryParam === 'motor-cycle' || parentParam === 'motor-cycle');
-            
+            const isPetrolActive = (cat.id === 'petrol-gasoline') && (categoryParam === 'petrol-gasoline' || parentParam === 'petrol-gasoline');
+            const isDieselActive = (cat.id === 'diesel-vehicle') && (categoryParam === 'diesel-vehicle' || parentParam === 'diesel-vehicle');
+            const isMotoActive = (cat.id === 'motor-cycle') && (categoryParam === 'motor-cycle' || parentParam === 'motor-cycle');
+            const isIndActive = (cat.id === 'industrial') && isIndustrialActiveSection;
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             const isDirectActive = categoryParam === cat.id && !parentParam;
             
-            const isActive = isDirectActive || isPetrolActive || isDieselActive || isMotoActive || isSpecialityActive;
+            const isActive = isDirectActive || isPetrolActive || isDieselActive || isMotoActive || isIndActive || isSpecialityActive;
 
             return (
               <button 
@@ -144,9 +172,7 @@ function ProductsList() {
                     router.push(url, { scroll: false });
                 }}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
-                  categoryParam === tab.id 
-                    ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' 
-                    : 'text-gray-400 hover:text-[#0D243F]'
+                  categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
               >
                 {tab.name}
@@ -178,9 +204,7 @@ function ProductsList() {
                     router.push(url, { scroll: false });
                 }}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
-                  categoryParam === tab.id 
-                    ? 'bg-[#E31E24] text-white shadow-xl scale-[1.02]' 
-                    : 'text-gray-400 hover:text-[#E31E24]'
+                  categoryParam === tab.id ? 'bg-[#E31E24] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#E31E24]'
                 }`}
               >
                 {tab.name}
@@ -193,7 +217,7 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 4. MOTORCYCLE TAB SWITCHER (NEW 2-TAB LAYOUT) */}
+      {/* 4. MOTORCYCLE TAB SWITCHER */}
       {(categoryParam === 'motor-cycle' || parentParam === 'motor-cycle') && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
@@ -211,9 +235,7 @@ function ProductsList() {
                     router.push(url, { scroll: false });
                 }}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
-                  categoryParam === tab.id 
-                    ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' 
-                    : 'text-gray-400 hover:text-[#0D243F]'
+                  categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
               >
                 {tab.name}
@@ -226,7 +248,52 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 5. SPECIALITY OIL SUB-CATEGORIES */}
+      {/* 5. INDUSTRIAL CATEGORY TAB SWITCHER (Level 1) */}
+      {isIndustrialActiveSection && (
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8 px-4 animate-in fade-in slide-in-from-top-2 duration-500">
+          <button onClick={() => router.push('/products?category=industrial')} className={`px-4 md:px-6 py-2.5 text-[9px] font-black border transition-all ${categoryParam === 'industrial' ? 'bg-[#0D243F] text-white border-[#0D243F] shadow-lg' : 'bg-white text-gray-500 border-gray-200 hover:border-[#0D243F]'}`}>ALL INDUSTRIAL</button>
+          
+          {industrialTabs.map(tab => {
+            const isTabActive = categoryParam === tab.id || parentParam === tab.id || (tab.id === 'circulating-oil' && circulatingSubs.map(s => s.id).includes(categoryParam)) || (tab.id === 'cutting-oil' && cuttingSubs.map(s => s.id).includes(categoryParam));
+            
+            return (
+              <button 
+                key={tab.id} 
+                onClick={() => router.push(`/products?category=${tab.id}&parent=industrial`, { scroll: false })} 
+                className={`px-4 md:px-6 py-2.5 text-[9px] font-black border transition-all ${isTabActive ? 'bg-[#0D243F] text-white border-[#0D243F] shadow-lg' : 'bg-white text-gray-500 border-gray-200 hover:border-[#0D243F]'}`}
+              >
+                {tab.name}
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {/* 5.1 INDUSTRIAL NESTED LEVEL 2: CIRCULATING SUBS */}
+      {(categoryParam === 'circulating-oil' || circulatingSubs.map(s => s.id).includes(categoryParam)) && (
+         <div className="flex justify-center gap-4 mb-12 animate-in fade-in zoom-in duration-300">
+            <button onClick={() => router.push(`/products?category=circulating-oil&parent=industrial`, { scroll: false })} className={`px-4 py-2 text-[9px] font-black border-b-2 transition-all ${categoryParam === 'circulating-oil' ? 'border-[#E31E24] text-[#0D243F]' : 'border-transparent text-gray-400 hover:text-[#0D243F]'}`}>SHOW ALL</button>
+            {circulatingSubs.map(sub => (
+              <button key={sub.id} onClick={() => router.push(`/products?category=${sub.id}&parent=${sub.parent}`, { scroll: false })} className={`px-4 py-2 text-[9px] font-black border-b-2 transition-all ${categoryParam === sub.id ? 'border-[#E31E24] text-[#0D243F]' : 'border-transparent text-gray-400 hover:text-[#0D243F]'}`}>
+                {sub.name}
+              </button>
+            ))}
+         </div>
+      )}
+
+      {/* 5.2 INDUSTRIAL NESTED LEVEL 2: CUTTING SUBS */}
+      {(categoryParam === 'cutting-oil' || cuttingSubs.map(s => s.id).includes(categoryParam)) && (
+         <div className="flex justify-center gap-4 mb-12 animate-in fade-in zoom-in duration-300">
+            <button onClick={() => router.push(`/products?category=cutting-oil&parent=industrial`, { scroll: false })} className={`px-4 py-2 text-[9px] font-black border-b-2 transition-all ${categoryParam === 'cutting-oil' ? 'border-[#E31E24] text-[#0D243F]' : 'border-transparent text-gray-400 hover:text-[#0D243F]'}`}>SHOW ALL</button>
+            {cuttingSubs.map(sub => (
+              <button key={sub.id} onClick={() => router.push(`/products?category=${sub.id}&parent=${sub.parent}`, { scroll: false })} className={`px-4 py-2 text-[9px] font-black border-b-2 transition-all ${categoryParam === sub.id ? 'border-[#E31E24] text-[#0D243F]' : 'border-transparent text-gray-400 hover:text-[#0D243F]'}`}>
+                {sub.name}
+              </button>
+            ))}
+         </div>
+      )}
+
+      {/* 6. SPECIALITY OIL SUB-CATEGORIES */}
       {(categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam)) && (
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-16 animate-in fade-in slide-in-from-top-2 duration-500 px-4">
           <button onClick={() => router.push('/products?category=speciality-oil')} className={`px-4 md:px-6 py-2 text-[9px] font-black border transition-all ${categoryParam === 'speciality-oil' ? 'bg-[#0D243F] text-white border-[#0D243F]' : 'bg-white text-gray-400 border-gray-200'}`}>ALL SPECIALITY</button>
@@ -235,47 +302,108 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 6. THE PRODUCT GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white border border-gray-50 shadow-sm flex flex-col group hover:shadow-2xl transition-all duration-500 rounded-sm">
-              <Link href={`/product/${product.id}`} className="relative aspect-square bg-[#FBFBFC] flex items-center justify-center overflow-hidden cursor-pointer">
-                 {product.image_url ? (
-                   <Image 
-                     src={product.image_url} 
-                     alt={product.name} 
-                     width={280} 
-                     height={280} 
-                     className="object-contain p-8 transition-transform duration-700 group-hover:scale-110" 
-                   />
-                 ) : (
-                   <div className="text-gray-300 text-[9px] uppercase font-black tracking-widest text-center px-4">Image Pending</div>
-                 )}
-              </Link>
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-[14px] md:text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
-                  {product.name}
-                </h3>
-                <div className="bg-[#F8F9FA] px-3 py-2 flex justify-between items-center mb-6 border-l-2 border-[#E31E24]">
-                  <span className="text-[8px] font-bold text-gray-500 uppercase">{product.viscosity || 'TDS AVAILABLE'}</span>
-                  <span className="text-[8px] font-black text-[#E31E24]">API GRADE</span>
-                </div>
-                <div className="mt-auto flex justify-between items-center">
-                  <Link href={`/product/${product.id}`} className="text-[9px] font-black text-[#2B99D6] hover:text-[#E31E24] uppercase tracking-widest transition-colors">
-                    TECHNICAL SPECS
-                  </Link>
-                  <ChevronRight size={14} className="text-[#2B99D6] group-hover:translate-x-1 transition-transform" />
+      {/* 7. CONDITIONAL RENDER ENGINE: Grid Layout vs Industrial Bulk Table Layout */}
+      {isIndustrialActiveSection ? (
+        
+        /* --- HIGH PERFORMANCE INDUSTRIAL B2B SPEC TABLE LAYOUT --- */
+        <div className="flex flex-col lg:flex-row gap-8 items-start bg-white border border-gray-100 p-6 md:p-10 rounded-sm shadow-sm mb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          
+          {/* Static Bulk Drum Package Container */}
+          <div className="w-full lg:w-1/3 aspect-square bg-[#FBFBFC] relative flex flex-col items-center justify-center border border-gray-50 rounded-sm group overflow-hidden">
+             <Image src="/drum-200l.png" alt="Industrial Bulk 200L Drum" fill className="object-contain p-10 transition-transform duration-700 group-hover:scale-105" />
+             <div className="absolute bottom-6 flex items-center gap-2 bg-white/90 backdrop-blur px-4 py-2 text-[9px] font-black text-[#0D243F] tracking-widest uppercase shadow-sm rounded-sm">
+                <Package size={14} className="text-[#E31E24]" /> 200L / 208L DRUMS
+             </div>
+          </div>
+
+          {/* Tab Filtered B2B Specifications Matrix */}
+          <div className="w-full lg:w-2/3 overflow-x-auto">
+            <div className="mb-6 flex justify-between items-end border-b-2 border-[#0D243F] pb-4">
+               <div>
+                 <h2 className="text-2xl font-black italic text-[#0D243F] uppercase leading-none">Industrial Bulk Range</h2>
+                 <p className="text-[10px] font-bold text-gray-400 tracking-widest uppercase mt-2">Technical Specifications Matrix</p>
+               </div>
+            </div>
+            
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-[#F8F9FA] text-[9px] text-gray-500 uppercase tracking-widest border-y border-gray-100">
+                  <th className="p-4 font-black">Product Formulation</th>
+                  <th className="p-4 font-black">Viscosity Range / ISO VG</th>
+                  <th className="p-4 font-black text-right">Technical Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map(product => (
+                    <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors group">
+                      <td className="p-4 text-[12px] md:text-[13px] font-black text-[#0D243F] uppercase italic">{product.name}</td>
+                      <td className="p-4">
+                        <span className="bg-white border border-gray-200 px-2 py-1 text-[9px] font-bold text-gray-500 uppercase tracking-wider rounded-sm shadow-sm">{product.viscosity || 'VARIOUS'}</span>
+                      </td>
+                      <td className="p-4 text-right">
+                        <Link href={`/product/${product.id}`} className="inline-flex items-center gap-1 text-[9px] font-black text-[#E31E24] hover:text-[#0D243F] uppercase tracking-widest transition-colors">
+                          View TDS <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="p-12 text-center text-[10px] text-gray-400 font-black tracking-widest uppercase border border-dashed border-gray-100">
+                      No products found under this specific formulation tab.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      ) : (
+
+        /* --- STANDARD RETAIL CARD GRID LAYOUT --- */
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-10 mb-24 min-h-[400px]">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <div key={product.id} className="bg-white border border-gray-50 shadow-sm flex flex-col group hover:shadow-2xl transition-all duration-500 rounded-sm">
+                <Link href={`/product/${product.id}`} className="relative aspect-square bg-[#FBFBFC] flex items-center justify-center overflow-hidden cursor-pointer">
+                   {product.image_url ? (
+                     <Image 
+                       src={product.image_url} 
+                       alt={product.name} 
+                       width={280} 
+                       height={280} 
+                       className="object-contain p-8 transition-transform duration-700 group-hover:scale-110" 
+                     />
+                   ) : (
+                     <div className="text-gray-300 text-[9px] uppercase font-black tracking-widest text-center px-4">Image Pending</div>
+                   )}
+                </Link>
+                <div className="p-6 flex flex-col flex-grow">
+                  <h3 className="text-[14px] md:text-[15px] font-black italic text-[#0D243F] uppercase mb-4 leading-tight group-hover:text-[#E31E24] transition-colors">
+                    {product.name}
+                  </h3>
+                  <div className="bg-[#F8F9FA] px-3 py-2 flex justify-between items-center mb-6 border-l-2 border-[#E31E24]">
+                    <span className="text-[8px] font-bold text-gray-500 uppercase">{product.viscosity || 'TDS AVAILABLE'}</span>
+                    <span className="text-[8px] font-black text-[#E31E24]">API GRADE</span>
+                  </div>
+                  <div className="mt-auto flex justify-between items-center">
+                    <Link href={`/product/${product.id}`} className="text-[9px] font-black text-[#2B99D6] hover:text-[#E31E24] uppercase tracking-widest transition-colors">
+                      TECHNICAL SPECS
+                    </Link>
+                    <ChevronRight size={14} className="text-[#2B99D6] group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-24 bg-gray-50 rounded-sm border-2 border-dashed border-gray-200 mx-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No products found in this category</p>
             </div>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-24 bg-gray-50 rounded-sm border-2 border-dashed border-gray-200 mx-4">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No products found in this category</p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </>
   );
 }
@@ -298,7 +426,6 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
-      <Footer />
     </main>
   );
 }

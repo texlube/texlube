@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
-// UPDATED: Category names and slugs to match the new Petrol/Gasoline and Diesel structure
 const productCategories = [
   { 
     name: "Petrol/Gasoline Vehicle", 
@@ -96,8 +95,13 @@ export default function Navbar() {
             </Link>
 
             {/* DESKTOP LINKS */}
-            <div className="hidden lg:flex items-center gap-10 h-full">
+            <div className="hidden lg:flex items-center gap-8 xl:gap-10 h-full">
               
+              {/* UPDATED: Added Main Home Item */}
+              <Link href="/" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
+                HOME
+              </Link>
+
               {/* PRODUCTS DROPDOWN */}
               <div className="relative group flex items-center h-full">
                 <Link 
@@ -120,7 +124,7 @@ export default function Navbar() {
                           {cat.hasSub && <ChevronRight size={12} className="text-gray-300" />}
                         </Link>
                         
-                        {/* SECONDARY FLYOUT MENU (For Petrol/Gasoline Vehicle & Speciality Oil) */}
+                        {/* SECONDARY FLYOUT MENU */}
                         {cat.hasSub && (
                           <div className="absolute top-0 left-full w-64 bg-white shadow-2xl opacity-0 invisible group-hover/sub:opacity-100 group-hover/sub:visible transition-all duration-300 border-l border-gray-100">
                             <div className="flex flex-col py-2">
@@ -142,22 +146,22 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <div className="relative group flex items-center h-full">
-                <Link href="/technology" className="flex items-center gap-1.5 text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors h-full">
-                  WHY TEXLUBE
-                  <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300 opacity-50" />
-                </Link>
-                <div className="absolute top-full left-0 w-64 bg-white shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 border-t-4 border-[#E31E24]">
-                  <div className="flex flex-col py-2">
-                    <Link href="/about" className="px-8 py-4 text-[11px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest border-b border-gray-50">ABOUT US</Link>
-                    <Link href="/contact" className="px-8 py-4 text-[11px] font-black text-[#0D243F] hover:bg-[#F9FAFB] hover:text-[#E31E24] transition-all uppercase tracking-widest">CONTACT</Link>
-                  </div>
-                </div>
-              </div>
+              <Link href="/technology" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
+                WHY TEXLUBE
+              </Link>
+
+              <Link href="/about" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
+                ABOUT US
+              </Link>
 
               <Link href="/news" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
                 NEWS
               </Link>
+
+              <Link href="/contact" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
+                CONTACT
+              </Link>
+
             </div>
 
             {/* RIGHT SIDE ACTIONS */}
@@ -183,6 +187,8 @@ export default function Navbar() {
           {isMobileMenuOpen && (
             <div className="lg:hidden bg-white border-t border-gray-100 absolute top-full left-0 w-full shadow-xl animate-in slide-in-from-top duration-300 overflow-y-auto max-h-[80vh]">
               <div className="flex flex-col p-6 gap-4">
+                {/* UPDATED: Added Home Item to mobile drawer as well */}
+                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Home</Link>
                 <Link href="/products?category=all-products" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Products</Link>
                 <Link href="/technology" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Why Texlube</Link>
                 <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-100 pb-3">About Us</Link>
