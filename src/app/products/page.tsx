@@ -104,24 +104,34 @@ function ProductsList() {
     const pParent = p.parentCategorySlug?.toLowerCase().trim() || '';
     const pName = p.name?.toLowerCase().trim() || '';
 
-    // --- CRITICAL FIX FOR ATF & GEAR SEPARATION ---
-    // Safely handles entries whether Sanity is configured as legacy 'atf-and-gear' or separate targets
+    // --- ACCURATE FIXED FILTER FOR ATF ---
     if (currentFilter === 'atf' || parentParam === 'atf') {
-      const belongsToAtf = pCat.includes('atf') || pParent.includes('atf') || pName.includes('atf');
-      if (!belongsToAtf) return false;
-      
-      if (currentFilter === 'atf-synthetic') return pCat.includes('synthetic');
-      if (currentFilter === 'atf-mineral') return pCat.includes('mineral');
-      return true;
+      if (pParent === 'atf' || pCat === 'atf' || pCat === 'atf-synthetic' || pCat === 'atf-mineral') {
+        if (currentFilter === 'atf-synthetic') return pCat === 'atf-synthetic';
+        if (currentFilter === 'atf-mineral') return pCat === 'atf-mineral';
+        return true;
+      }
+      if (pCat.includes('atf') || pParent.includes('atf') || pName.includes('atf')) {
+        if (currentFilter === 'atf-synthetic') return pCat.includes('synthetic');
+        if (currentFilter === 'atf-mineral') return pCat.includes('mineral');
+        return !pCat.includes('gear') && !pName.includes('gear'); 
+      }
+      return false;
     }
 
+    // --- ACCURATE FIXED FILTER FOR GEAR OIL ---
     if (currentFilter === 'gear-oil' || parentParam === 'gear-oil') {
-      const belongsToGear = pCat.includes('gear') || pParent.includes('gear') || pName.includes('gear');
-      if (!belongsToGear) return false;
-      
-      if (currentFilter === 'gear-synthetic') return pCat.includes('synthetic');
-      if (currentFilter === 'gear-mineral') return pCat.includes('mineral');
-      return true;
+      if (pParent === 'gear-oil' || pCat === 'gear-oil' || pCat === 'gear-synthetic' || pCat === 'gear-mineral') {
+        if (currentFilter === 'gear-synthetic') return pCat === 'gear-synthetic';
+        if (currentFilter === 'gear-mineral') return pCat === 'gear-mineral';
+        return true;
+      }
+      if (pCat.includes('gear') || pParent.includes('gear') || pName.includes('gear')) {
+        if (currentFilter === 'gear-synthetic') return pCat.includes('synthetic');
+        if (currentFilter === 'gear-mineral') return pCat.includes('mineral');
+        return true;
+      }
+      return false;
     }
 
     // Context-aware filtering for all shared sub-categories (Petrol, Diesel, Moto, Industrial)
@@ -158,6 +168,7 @@ function ProductsList() {
             const isIndActive = (cat.id === 'industrial') && isIndustrialActiveSection;
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             
+            // FIXED: Fully isolated startsWith constraints to prevent visual active category hijacking
             const isAtfActive = (cat.id === 'atf') && (categoryParam === 'atf' || parentParam === 'atf' || categoryParam.startsWith('atf-'));
             const isGearActive = (cat.id === 'gear-oil') && (categoryParam === 'gear-oil' || parentParam === 'gear-oil' || categoryParam.startsWith('gear-'));
 
@@ -195,12 +206,7 @@ function ProductsList() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                    const url = tab.parent 
-                        ? `/products?category=${tab.id}&parent=${tab.parent}`
-                        : `/products?category=${tab.id}`;
-                    router.push(url, { scroll: false });
-                }}
+                onClick={() => router.push(tab.parent ? `/products?category=${tab.id}&parent=${tab.parent}` : `/products?category=${tab.id}`, { scroll: false })}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
@@ -227,12 +233,7 @@ function ProductsList() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                    const url = tab.parent 
-                        ? `/products?category=${tab.id}&parent=${tab.parent}`
-                        : `/products?category=${tab.id}`;
-                    router.push(url, { scroll: false });
-                }}
+                onClick={() => router.push(tab.parent ? `/products?category=${tab.id}&parent=${tab.parent}` : `/products?category=${tab.id}`, { scroll: false })}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id ? 'bg-[#E31E24] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#E31E24]'
                 }`}
@@ -258,12 +259,7 @@ function ProductsList() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                    const url = tab.parent 
-                        ? `/products?category=${tab.id}&parent=${tab.parent}`
-                        : `/products?category=${tab.id}`;
-                    router.push(url, { scroll: false });
-                }}
+                onClick={() => router.push(tab.parent ? `/products?category=${tab.id}&parent=${tab.parent}` : `/products?category=${tab.id}`, { scroll: false })}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
@@ -289,12 +285,7 @@ function ProductsList() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                    const url = tab.parent 
-                        ? `/products?category=${tab.id}&parent=${tab.parent}`
-                        : `/products?category=${tab.id}`;
-                    router.push(url, { scroll: false });
-                }}
+                onClick={() => router.push(tab.parent ? `/products?category=${tab.id}&parent=${tab.parent}` : `/products?category=${tab.id}`, { scroll: false })}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
@@ -320,12 +311,7 @@ function ProductsList() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                    const url = tab.parent 
-                        ? `/products?category=${tab.id}&parent=${tab.parent}`
-                        : `/products?category=${tab.id}`;
-                    router.push(url, { scroll: false });
-                }}
+                onClick={() => router.push(tab.parent ? `/products?category=${tab.id}&parent=${tab.parent}` : `/products?category=${tab.id}`, { scroll: false })}
                 className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
                   categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
                 }`}
@@ -518,7 +504,6 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
-
     </main>
   );
 }
