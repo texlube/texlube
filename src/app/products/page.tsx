@@ -18,9 +18,10 @@ const categories = [
   { id: 'petrol-gasoline', name: 'PETROL/GASOLINE VEHICLE' }, 
   { id: 'diesel-vehicle', name: 'DIESEL VEHICLE' },           
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
-  { id: 'atf-and-gear', name: 'ATF & GEAR' },
-  { id: 'industrial', name: 'INDUSTRIAL' },
-  { id: 'hydraulic', name: 'HYDRAULIC' },
+  { id: 'atf', name: 'ATF' },               
+  { id: 'gear-oil', name: 'GEAR OIL' },     
+  { id: 'hydraulic', name: 'HYDRAULIC' },     // Swapped position here
+  { id: 'industrial', name: 'INDUSTRIAL' },   // Swapped position here
   { id: 'speciality-oil', name: 'SPECIALITY OIL' },
   { id: 'greases', name: 'GREASES' },
 ];
@@ -29,6 +30,7 @@ const categories = [
 const mainSubs = ['semi-synthetic', 'fully-synthetic', 'mineral']; 
 const motoSubs = ['synthetic', 'multigrade']; 
 const specialitySubs = ['coolant', 'brake-fluid'];
+const atfGearSubs = ['atf-mineral', 'atf-synthetic', 'gear-mineral', 'gear-synthetic']; 
 
 // INDUSTRIAL NESTED TABS CONSTANTS
 const industrialTabs = [
@@ -102,7 +104,11 @@ function ProductsList() {
     const pParent = p.parentCategorySlug?.toLowerCase().trim();
 
     // Context-aware filtering for shared or specific sub-categories
-    const isSharedSub = mainSubs.includes(currentFilter) || motoSubs.includes(currentFilter) || allIndustrialSubs.includes(currentFilter);
+    const isSharedSub = mainSubs.includes(currentFilter) || 
+                        motoSubs.includes(currentFilter) || 
+                        allIndustrialSubs.includes(currentFilter) ||
+                        atfGearSubs.includes(currentFilter);
+
     if (isSharedSub && parentParam) {
         return pCat === currentFilter && (pParent === parentParam || p.parentCategorySlug === 'industrial');
     }
@@ -131,9 +137,13 @@ function ProductsList() {
             const isMotoActive = (cat.id === 'motor-cycle') && (categoryParam === 'motor-cycle' || parentParam === 'motor-cycle');
             const isIndActive = (cat.id === 'industrial') && isIndustrialActiveSection;
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
+            
+            const isAtfActive = (cat.id === 'atf') && (categoryParam === 'atf' || parentParam === 'atf');
+            const isGearActive = (cat.id === 'gear-oil') && (categoryParam === 'gear-oil' || parentParam === 'gear-oil');
+
             const isDirectActive = categoryParam === cat.id && !parentParam;
             
-            const isActive = isDirectActive || isPetrolActive || isDieselActive || isMotoActive || isIndActive || isSpecialityActive;
+            const isActive = isDirectActive || isPetrolActive || isDieselActive || isMotoActive || isIndActive || isSpecialityActive || isAtfActive || isGearActive;
 
             return (
               <button 
@@ -244,6 +254,68 @@ function ProductsList() {
           </div>
           <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">2T & 4T ENGINE OILS</p>
+          </div>
+        </div>
+      )}
+
+      {/* 4.1 ATF TAB SWITCHER */}
+      {(categoryParam === 'atf' || parentParam === 'atf') && (
+        <div className="flex flex-col items-center mb-16 px-4">
+          <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
+            {[
+              { id: 'atf', name: 'SHOW ALL', parent: null },
+              { id: 'atf-synthetic', name: 'SYNTHETIC', parent: 'atf' },
+              { id: 'atf-mineral', name: 'MINERAL', parent: 'atf' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                    const url = tab.parent 
+                        ? `/products?category=${tab.id}&parent=${tab.parent}`
+                        : `/products?category=${tab.id}`;
+                    router.push(url, { scroll: false });
+                }}
+                className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
+                  categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">AUTOMATIC TRANSMISSION FLUIDS</p>
+          </div>
+        </div>
+      )}
+
+      {/* 4.2 GEAR OIL TAB SWITCHER */}
+      {(categoryParam === 'gear-oil' || parentParam === 'gear-oil') && (
+        <div className="flex flex-col items-center mb-16 px-4">
+          <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
+            {[
+              { id: 'gear-oil', name: 'SHOW ALL', parent: null },
+              { id: 'gear-synthetic', name: 'SYNTHETIC', parent: 'gear-oil' },
+              { id: 'gear-mineral', name: 'MINERAL', parent: 'gear-oil' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                    const url = tab.parent 
+                        ? `/products?category=${tab.id}&parent=${tab.parent}`
+                        : `/products?category=${tab.id}`;
+                    router.push(url, { scroll: false });
+                }}
+                className={`px-4 md:px-8 py-3 text-[9px] font-black uppercase tracking-widest transition-all duration-300 rounded-sm ${
+                  categoryParam === tab.id ? 'bg-[#0D243F] text-white shadow-xl scale-[1.02]' : 'text-gray-400 hover:text-[#0D243F]'
+                }`}
+              >
+                {tab.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 text-center animate-in fade-in slide-in-from-bottom-2 duration-700">
+             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">HIGH PERFORMANCE GEAR OILS</p>
           </div>
         </div>
       )}
@@ -426,6 +498,7 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
+      <Footer />
     </main>
   );
 }
