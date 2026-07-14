@@ -20,8 +20,8 @@ const categories = [
   { id: 'motor-cycle', name: 'MOTOR CYCLE' },
   { id: 'atf', name: 'ATF' },               
   { id: 'gear-oil', name: 'GEAR OIL' },     
-  { id: 'hydraulic', name: 'HYDRAULIC' },     // Swapped position here
-  { id: 'industrial', name: 'INDUSTRIAL' },   // Swapped position here
+  { id: 'hydraulic', name: 'HYDRAULIC' },     
+  { id: 'industrial', name: 'INDUSTRIAL' },   
   { id: 'speciality-oil', name: 'SPECIALITY OIL' },
   { id: 'greases', name: 'GREASES' },
 ];
@@ -100,17 +100,37 @@ function ProductsList() {
     const currentFilter = categoryParam.toLowerCase().trim();
     if (currentFilter === 'all-products') return true;
 
-    const pCat = p.categorySlug?.toLowerCase().trim();
-    const pParent = p.parentCategorySlug?.toLowerCase().trim();
+    const pCat = p.categorySlug?.toLowerCase().trim() || '';
+    const pParent = p.parentCategorySlug?.toLowerCase().trim() || '';
+    const pName = p.name?.toLowerCase().trim() || '';
 
-    // Context-aware filtering for shared or specific sub-categories
+    // --- CRITICAL FIX FOR ATF & GEAR SEPARATION ---
+    // Safely handles entries whether Sanity is configured as legacy 'atf-and-gear' or separate targets
+    if (currentFilter === 'atf' || parentParam === 'atf') {
+      const belongsToAtf = pCat.includes('atf') || pParent.includes('atf') || pName.includes('atf');
+      if (!belongsToAtf) return false;
+      
+      if (currentFilter === 'atf-synthetic') return pCat.includes('synthetic');
+      if (currentFilter === 'atf-mineral') return pCat.includes('mineral');
+      return true;
+    }
+
+    if (currentFilter === 'gear-oil' || parentParam === 'gear-oil') {
+      const belongsToGear = pCat.includes('gear') || pParent.includes('gear') || pName.includes('gear');
+      if (!belongsToGear) return false;
+      
+      if (currentFilter === 'gear-synthetic') return pCat.includes('synthetic');
+      if (currentFilter === 'gear-mineral') return pCat.includes('mineral');
+      return true;
+    }
+
+    // Context-aware filtering for all shared sub-categories (Petrol, Diesel, Moto, Industrial)
     const isSharedSub = mainSubs.includes(currentFilter) || 
                         motoSubs.includes(currentFilter) || 
-                        allIndustrialSubs.includes(currentFilter) ||
-                        atfGearSubs.includes(currentFilter);
+                        allIndustrialSubs.includes(currentFilter);
 
     if (isSharedSub && parentParam) {
-        return pCat === currentFilter && (pParent === parentParam || p.parentCategorySlug === 'industrial');
+        return pCat === currentFilter && (pParent === parentParam || pParent === 'industrial');
     }
 
     return pCat === currentFilter || pParent === currentFilter;
@@ -138,8 +158,8 @@ function ProductsList() {
             const isIndActive = (cat.id === 'industrial') && isIndustrialActiveSection;
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             
-            const isAtfActive = (cat.id === 'atf') && (categoryParam === 'atf' || parentParam === 'atf');
-            const isGearActive = (cat.id === 'gear-oil') && (categoryParam === 'gear-oil' || parentParam === 'gear-oil');
+            const isAtfActive = (cat.id === 'atf') && (categoryParam === 'atf' || parentParam === 'atf' || categoryParam.startsWith('atf-'));
+            const isGearActive = (cat.id === 'gear-oil') && (categoryParam === 'gear-oil' || parentParam === 'gear-oil' || categoryParam.startsWith('gear-'));
 
             const isDirectActive = categoryParam === cat.id && !parentParam;
             
@@ -259,7 +279,7 @@ function ProductsList() {
       )}
 
       {/* 4.1 ATF TAB SWITCHER */}
-      {(categoryParam === 'atf' || parentParam === 'atf') && (
+      {(categoryParam === 'atf' || parentParam === 'atf' || categoryParam.startsWith('atf-')) && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
             {[
@@ -290,7 +310,7 @@ function ProductsList() {
       )}
 
       {/* 4.2 GEAR OIL TAB SWITCHER */}
-      {(categoryParam === 'gear-oil' || parentParam === 'gear-oil') && (
+      {(categoryParam === 'gear-oil' || parentParam === 'gear-oil' || categoryParam.startsWith('gear-')) && (
         <div className="flex flex-col items-center mb-16 px-4">
           <div className="inline-flex bg-gray-100 p-1.5 rounded-sm border border-gray-200 shadow-inner">
             {[
@@ -498,7 +518,7 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
-      <Footer />
+
     </main>
   );
 }
