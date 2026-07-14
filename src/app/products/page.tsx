@@ -8,7 +8,9 @@ import { client } from '@/sanity/lib/client';
 import { 
   Loader2, 
   ChevronRight,
-  Package
+  Package,
+  FileText,
+  Download
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -146,6 +148,15 @@ function ProductsList() {
     return pCat === currentFilter || pParent === currentFilter;
   });
 
+  // Smooth scroll handler targeting footer catalog anchor ID
+  const handleScrollToFooterCatalog = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const footerElement = document.getElementById('catalog-download-section') || document.querySelector('footer');
+    if (footerElement) {
+      footerElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-40">
       <Loader2 className="animate-spin text-[#E31E24] mb-4" size={40} />
@@ -168,7 +179,6 @@ function ProductsList() {
             const isIndActive = (cat.id === 'industrial') && isIndustrialActiveSection;
             const isSpecialityActive = cat.id === 'speciality-oil' && (categoryParam === 'speciality-oil' || specialitySubs.includes(categoryParam));
             
-            // FIXED: Fully isolated startsWith constraints to prevent visual active category hijacking
             const isAtfActive = (cat.id === 'atf') && (categoryParam === 'atf' || parentParam === 'atf' || categoryParam.startsWith('atf-'));
             const isGearActive = (cat.id === 'gear-oil') && (categoryParam === 'gear-oil' || parentParam === 'gear-oil' || categoryParam.startsWith('gear-'));
 
@@ -380,61 +390,43 @@ function ProductsList() {
         </div>
       )}
 
-      {/* 7. CONDITIONAL RENDER ENGINE: Grid Layout vs Industrial Bulk Table Layout */}
+      {/* 7. CONDITIONAL RENDER ENGINE */}
       {isIndustrialActiveSection ? (
         
-        /* --- HIGH PERFORMANCE INDUSTRIAL B2B SPEC TABLE LAYOUT --- */
-        <div className="flex flex-col lg:flex-row gap-8 items-start bg-white border border-gray-100 p-6 md:p-10 rounded-sm shadow-sm mb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          
-          {/* Static Bulk Drum Package Container */}
-          <div className="w-full lg:w-1/3 aspect-square bg-[#FBFBFC] relative flex flex-col items-center justify-center border border-gray-50 rounded-sm group overflow-hidden">
-             <Image src="/drum-200l.png" alt="Industrial Bulk 200L Drum" fill className="object-contain p-10 transition-transform duration-700 group-hover:scale-105" />
-             <div className="absolute bottom-6 flex items-center gap-2 bg-white/90 backdrop-blur px-4 py-2 text-[9px] font-black text-[#0D243F] tracking-widest uppercase shadow-sm rounded-sm">
-                <Package size={14} className="text-[#E31E24]" /> 200L / 208L DRUMS
-             </div>
+        /* --- HIGH END REDIRECT CTA TO LEAD FORM IN FOOTER --- */
+        <div className="w-full max-w-4xl mx-auto bg-[#FBFBFC] border border-gray-200 p-8 md:p-16 text-center rounded-sm shadow-sm mb-24 animate-in fade-in zoom-in duration-500">
+          <div className="w-16 h-16 bg-[#0D243F]/5 text-[#0D243F] flex items-center justify-center rounded-full mx-auto mb-6">
+            <FileText size={28} className="text-[#2B99D6]" />
           </div>
-
-          {/* Tab Filtered B2B Specifications Matrix */}
-          <div className="w-full lg:w-2/3 overflow-x-auto">
-            <div className="mb-6 flex justify-between items-end border-b-2 border-[#0D243F] pb-4">
-               <div>
-                 <h2 className="text-2xl font-black italic text-[#0D243F] uppercase leading-none">Industrial Bulk Range</h2>
-                 <p className="text-[10px] font-bold text-gray-400 tracking-widest uppercase mt-2">Technical Specifications Matrix</p>
-               </div>
-            </div>
-            
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#F8F9FA] text-[9px] text-gray-500 uppercase tracking-widest border-y border-gray-100">
-                  <th className="p-4 font-black">Product Formulation</th>
-                  <th className="p-4 font-black">Viscosity Range / ISO VG</th>
-                  <th className="p-4 font-black text-right">Technical Data</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map(product => (
-                    <tr key={product.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors group">
-                      <td className="p-4 text-[12px] md:text-[13px] font-black text-[#0D243F] uppercase italic">{product.name}</td>
-                      <td className="p-4">
-                        <span className="bg-white border border-gray-200 px-2 py-1 text-[9px] font-bold text-gray-500 uppercase tracking-wider rounded-sm shadow-sm">{product.viscosity || 'VARIOUS'}</span>
-                      </td>
-                      <td className="p-4 text-right">
-                        <Link href={`/product/${product.id}`} className="inline-flex items-center gap-1 text-[9px] font-black text-[#E31E24] hover:text-[#0D243F] uppercase tracking-widest transition-colors">
-                          View TDS <ChevronRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={3} className="p-12 text-center text-[10px] text-gray-400 font-black tracking-widest uppercase border border-dashed border-gray-100">
-                      No products found under this specific formulation tab.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+          <h2 className="text-2xl md:text-4xl font-black italic text-[#0D243F] uppercase tracking-tight mb-4">
+            Industrial Range Catalog
+          </h2>
+          <p className="text-gray-500 text-sm md:text-base max-w-xl mx-auto leading-relaxed mb-10 font-medium">
+            Our full suite of industrial bulk formulations, processing lubricants, and machine oils are currently being finalized in the database. Download our updated digital product manual below for instant technical specifications.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            {/* UPDATED: Links smoothly to the footer download catalog widget wrapper */}
+            <a 
+              href="#catalog-download-section" 
+              onClick={handleScrollToFooterCatalog}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#E31E24] text-white px-8 py-4 font-black uppercase text-[10px] tracking-widest hover:bg-[#0D243F] transition-all duration-300 rounded-sm shadow-md cursor-pointer"
+            >
+              Open Download Form <Download size={14} />
+            </a>
+            <Link 
+              href="/contact"
+              className="w-full sm:w-auto inline-flex items-center justify-center bg-white text-[#0D243F] border border-gray-300 px-8 py-4 font-black uppercase text-[10px] tracking-widest hover:bg-gray-50 transition-all duration-300 rounded-sm"
+            >
+              Request Custom Quote
+            </Link>
+          </div>
+          
+          {/* Background anchors keeping sub-definitions compiled correctly inside tree */}
+          <div className="hidden">
+            {industrialTabs.map(t => <span key={t.id}>{t.name}</span>)}
+            {circulatingSubs.map(t => <span key={t.id}>{t.name}</span>)}
+            {cuttingSubs.map(t => <span key={t.id}>{t.name}</span>)}
           </div>
         </div>
 
@@ -504,6 +496,7 @@ export default function ProductsPage() {
           <ProductsList />
         </Suspense>
       </div>
+      <Footer />
     </main>
   );
 }
