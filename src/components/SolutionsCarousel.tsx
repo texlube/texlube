@@ -2,7 +2,7 @@
 
 import React, { useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay'; // New Import
+import Autoplay from 'embla-carousel-autoplay'; 
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -10,12 +10,12 @@ const solutions = [
   {
     title: "OUR SOLUTIONS FOR PASSENGER CARS",
     image: "https://images.unsplash.com/photo-1633767859621-c44623dbf8bd?q=80&w=1170&auto=format&fit=crop",
-    slug: "passenger-car"
+    slug: "petrol-gasoline" // UPDATED: Points to Petrol & Gasoline Vehicle
   },
   {
     title: "OUR SOLUTIONS FOR TRUCKS & BUSSES",
     image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=800",
-    slug: "truck-and-busses"
+    slug: "diesel-vehicle" // UPDATED: Points to Diesel Vehicle
   },
   {
     title: "OUR SOLUTIONS FOR MOTOR CYCLES",
@@ -23,9 +23,9 @@ const solutions = [
     slug: "motor-cycle"
   },
   {
-    title: "OUR SOLUTIONS FOR ATF & GEAR",
+    title: "OUR SOLUTIONS FOR ATF",
     image: "https://images.unsplash.com/photo-1681113376967-1fcd00cf78ee?q=80&w=1170&auto=format&fit=crop",
-    slug: "atf-and-gear"
+    slug: "atf" // UPDATED: Points to clean split ATF
   },
   {
     title: "OUR SOLUTIONS FOR INDUSTRIAL",
@@ -50,20 +50,19 @@ const solutions = [
 ];
 
 export default function SolutionsCarousel() {
-  // 1. Setup Embla with Autoplay plugin
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
       align: 'start',
       slidesToScroll: 1,
       containScroll: 'trimSnaps',
-      duration: 60 // Makes the transition itself slower/smoother
+      duration: 60 
     }, 
     [
       Autoplay({ 
-        delay: 3000, // 3 seconds pause between movements
-        stopOnInteraction: false, // Keeps moving even after user clicks
-        stopOnMouseEnter: true    // Pauses when user hovers to look at a card
+        delay: 3000, 
+        stopOnInteraction: false, 
+        stopOnMouseEnter: true    
       })
     ]
   );
