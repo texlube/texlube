@@ -26,7 +26,8 @@ const productCategories = [
   },
   { name: "Diesel Vehicle", slug: "diesel-vehicle" },
   { name: "Motor Cycle", slug: "motor-cycle" },
-  { name: "ATF & Gear", slug: "atf-and-gear" },
+  { name: "ATF", slug: "atf" },
+  { name: "Gear Oil", slug: "gear-oil" },
   { name: "Industrial", slug: "industrial" },
   { name: "Hydraulic", slug: "hydraulic" },
   { 
@@ -49,8 +50,8 @@ export default function Navbar() {
     <>
       <header className="fixed top-0 left-0 w-full z-[100]">
         
-        {/* 1. TOP UTILITY BAR */}
-        <div className="w-full bg-[#12223b] text-white py-2.5 px-6 border-b border-white/5">
+        {/* 1. TOP UTILITY BAR (UPDATED: Added hidden md:block to cleanly hide on mobile) */}
+        <div className="hidden md:block w-full bg-[#12223b] text-white py-2.5 px-6 border-b border-white/5">
           <div className="max-w-[1300px] mx-auto flex justify-center items-center gap-4 md:gap-12">
             {/* PHONE */}
             <a href="tel:+97165295105" className="flex items-center gap-2 hover:text-[#E31E24] transition-all group">
@@ -97,7 +98,6 @@ export default function Navbar() {
             {/* DESKTOP LINKS */}
             <div className="hidden lg:flex items-center gap-8 xl:gap-10 h-full">
               
-              {/* UPDATED: Added Main Home Item */}
               <Link href="/" className="text-[12px] font-black uppercase tracking-[0.1em] text-[#0D243F] hover:text-[#E31E24] transition-colors">
                 HOME
               </Link>
@@ -187,7 +187,6 @@ export default function Navbar() {
           {isMobileMenuOpen && (
             <div className="lg:hidden bg-white border-t border-gray-100 absolute top-full left-0 w-full shadow-xl animate-in slide-in-from-top duration-300 overflow-y-auto max-h-[80vh]">
               <div className="flex flex-col p-6 gap-4">
-                {/* UPDATED: Added Home Item to mobile drawer as well */}
                 <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Home</Link>
                 <Link href="/products?category=all-products" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Products</Link>
                 <Link href="/technology" onClick={() => setIsMobileMenuOpen(false)} className="text-[12px] font-black uppercase text-[#0D243F] border-b border-gray-50 pb-3">Why Texlube</Link>
