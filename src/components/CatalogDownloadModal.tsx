@@ -64,18 +64,54 @@ export default function CatalogDownloadModal({ isOpen, onClose, fileUrl, langLab
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                <input required placeholder="Full Name *" type="text" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} className="w-full bg-[#F8F9FA] p-4 text-sm font-bold outline-none border-b-2 border-transparent focus:border-[#2B99D6]" />
+                {/* Fixed placeholder and text color attributes */}
+                <input 
+                  required 
+                  placeholder="Full Name *" 
+                  type="text" 
+                  value={formData.fullName} 
+                  onChange={(e) => setFormData({...formData, fullName: e.target.value})} 
+                  className="w-full bg-[#F8F9FA] p-4 text-sm font-bold outline-none border-b-2 border-transparent focus:border-[#2B99D6] text-[#0D243F] placeholder:text-gray-500" 
+                />
+                
                 <div className="grid grid-cols-2 gap-5">
-                  <select required value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none">
-                    <option value="">Country *</option>
-                    {countries.map(c => <option key={c.iso} value={c.name}>{c.name}</option>)}
+                  <select 
+                    required 
+                    value={formData.country} 
+                    onChange={(e) => setFormData({...formData, country: e.target.value})} 
+                    className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none text-[#0D243F]"
+                  >
+                    <option value="" className="text-gray-500">Country *</option>
+                    {countries.map(c => <option key={c.iso} value={c.name} className="text-[#0D243F]">{c.name}</option>)}
                   </select>
-                  <input required placeholder="Mobile *" type="tel" value={formData.mobile} onChange={(e) => setFormData({...formData, mobile: e.target.value})} className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none" />
+                  
+                  <input 
+                    required 
+                    placeholder="Mobile *" 
+                    type="tel" 
+                    value={formData.mobile} 
+                    onChange={(e) => setFormData({...formData, mobile: e.target.value})} 
+                    className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none text-[#0D243F] placeholder:text-gray-500" 
+                  />
                 </div>
+                
                 <div className="grid grid-cols-2 gap-5">
-                  <input placeholder="Company" type="text" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none" />
-                  <input placeholder="Email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none" />
+                  <input 
+                    placeholder="Company" 
+                    type="text" 
+                    value={formData.company} 
+                    onChange={(e) => setFormData({...formData, company: e.target.value})} 
+                    className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none text-[#0D243F] placeholder:text-gray-500" 
+                  />
+                  <input 
+                    placeholder="Email" 
+                    type="email" 
+                    value={formData.email} 
+                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                    className="bg-[#F8F9FA] p-4 text-sm font-bold outline-none text-[#0D243F] placeholder:text-gray-500" 
+                  />
                 </div>
+                
                 <button disabled={isSubmitting} type="submit" className="w-full bg-[#0D243F] text-white py-6 font-black uppercase text-[11px] tracking-[0.2em] flex items-center justify-center gap-3 hover:bg-[#E31E24] transition-all">
                   {isSubmitting ? <Loader2 className="animate-spin" /> : <>SUBMIT & DOWNLOAD <Download size={18} /></>}
                 </button>
